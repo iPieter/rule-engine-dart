@@ -4,6 +4,8 @@ import 'clause.dart';
 import 'dart:io';
 import 'assignment.dart';
 import 'condition.dart';
+import 'consequence.dart';
+import 'window.dart';
 import 'nodes/node.dart';
 import 'nodes/aggregate_node.dart';
 import 'nodes/symbol_node.dart';
@@ -57,6 +59,12 @@ class Parser
     return true;
   }
 
+  exitWithError( String error )
+  {
+    print(error);
+    exit(-1);
+  }
+
   assertTokenList( Token token, List<TokenType> types, {String value : ""} )
   {
     bool match = false;
@@ -65,15 +73,13 @@ class Parser
 
     if( !match )
     {
-      print( "Error while parsing, expected ${type}, got ${token.type} for token: ${token}" );
-      exit(-1);
+      exitWithError( "Error while parsing, expected ${type}, got ${token.type} for token: ${token}" );
     }
     if( value != "" )
     {
       if( token.name != value )
       {
-        print( "Error while parsing, expected ${value}, got ${token.name} for token: ${token}" );
-        exit(-1);
+        exitWithError( "Error while parsing, expected ${value}, got ${token.name} for token: ${token}" );
       }
     }
     return true;
@@ -227,6 +233,106 @@ class Parser
     assertToken(consumeToken(), TokenType.RIGHT_PAREN);
     assertToken(consumeToken(), TokenType.IDENTIFIER, value: "over" );
 
+    assertToken(consumeToken(), TokenType.IDENTIFIER, value: "Window" );
+    assertToken(consumeToken(), TokenType.LEFT_PAREN );
+
+    lookahead = peekToken();
+
+    Window window = new Window();
+
+    while( lookahead.type != TokenType.RIGHT_PAREN )
+    {
+      Token t = consumeToken();
+      if( t.name == "end" || t.name == "start" )
+      {
+        assertToken(consumeToken(), TokenType.COLON );
+        Token dateStringToken = consumeToken();
+        assertToken(dateStringToken, TokenType.STRING );
+
+        if( t.name == "start" )
+        {
+          if( window.start != "" )
+            exitWithError("Window contains more than 2 start declarations");
+          
+          window.start = dateStringToken.name;
+        }
+        if( t.name == "end" )
+        {
+          if( window.end != "" )
+            exitWithError("Window contains more than 2 end declarations");
+          
+          window.end = dateStringToken.name;
+        }
+      }
+      else
+      {
+        assertToken(t, TokenType.IDENTIFIER, value: "length" );
+        assertToken(consumeToken(), TokenType.COLON );
+
+        Token lengthCheckToken = consumeToken();
+        if( lengthCheckToken.name == "Duration" )
+        {
+          assertToken(lengthCheckToken, TokenType.IDENTIFIER, value: "Duration" );
+          assertToken(consumeToken(), TokenType.LEFT_PAREN );
+
+          Token ll = peekToken();
+          while( ll.type != TokenType.RIGHT_PAREN )
+          {
+            Token n = consumeToken();
+            assertToken(n, TokenType.IDENTIFIER);
+            assertToken(consumeToken(), TokenType.COLON);
+            Token v = consumeToken();
+            assertToken(v, TokenType.IDENTIFIER);
+
+            window.durationArguments[n.name] = v.name;
+            ll = peekToken();
+          }
+          assertToken(consumeToken(), TokenType.RIGHT_PAREN );
+        }
+        else
+        {
+          window.durationArguments["cardinal"] = lengthCheckToken.name;
+        }
+      }
+      lookahead = peekToken();
+      if( lookahead.type == TokenType.COMMA )
+        assertToken(consumeToken(), TokenType.COMMA);
+      lookahead = peekToken();
+    }
+
+    result.window = window;
+
+    assertToken(consumeToken(), TokenType.RIGHT_PAREN );
+
+    return result;
+  }
+
+  Consequence buildConsequence()
+  {
+    Consequence result;
+    assertToken(consumeToken(), TokenType.IDENTIFIER, value: "insert" );
+
+    Token typeToken = consumeToken();
+    assertToken(typeToken, TokenType.IDENTIFIER );
+    result = new Consequence(typeToken.name);
+    assertToken(consumeToken(), TokenType.LEFT_PAREN );
+
+    Token lookahead = peekToken();
+
+    while( lookahead.type != TokenType.RIGHT_PAREN )
+    {
+      Token arg = consumeToken();
+      result.addArgument(arg.name);
+
+      lookahead = peekToken();
+      if( lookahead.type == TokenType.COMMA )
+        assertToken(consumeToken(), TokenType.COMMA );
+
+      lookahead = peekToken();
+    }
+
+    assertToken(consumeToken(), TokenType.RIGHT_PAREN );
+
     return result;
   }
 
@@ -241,13 +347,20 @@ class Parser
     assertToken( consumeToken(), TokenType.IDENTIFIER, value: "when");
 
     Token t = peekToken();
-    while( t.name != "when" )
+    while( t.name != "then" )
     {
       Clause c = buildClause();
       rule.addClause(c);
 
       t = peekToken();
     }
+
+    assertToken(consumeToken(), TokenType.IDENTIFIER, value: "then" );
+    Consequence consequence = buildConsequence();
+
+    rule.consequence = consequence;
+
+    assertToken(consumeToken(), TokenType.IDENTIFIER, value: "end" );
 
     return rule;
   }

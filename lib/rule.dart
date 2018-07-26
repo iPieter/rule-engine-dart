@@ -1,9 +1,11 @@
 import "clause.dart";
+import 'consequence.dart';
 
 class Rule
 {
   String _name;
   List<Clause> _clauses;
+  Consequence consequence;
 
   Rule(this._name)
   {
