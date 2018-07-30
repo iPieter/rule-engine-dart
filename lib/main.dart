@@ -9,7 +9,7 @@ var test = """
 String code = r"""
 rule "weekly saver"
   when
-      Expense( $1 : sum( amount ) ) over Window( start : "1969-07-20 00:00:00", length : Duration(days:2) )
+      Expense( $1 : sum( amount ), 20 < amount ) over Window( start : "1969-07-20 00:00:00", length : Duration(days:2) )
   then
       insert Achievement( "weekly saver", "...", Badges.2 )
 end

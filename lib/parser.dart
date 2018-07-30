@@ -215,8 +215,8 @@ class Parser
 
       Token clauseSubject = consumeToken();
 
-      Token lookahead = peekToken();
-      if( lookahead.type == TokenType.COLON )
+      Token ll = peekToken();
+      if( ll.type == TokenType.COLON )
       {
         var assignment = buildAssignment(clauseSubject);
         print(assignment.toString());
@@ -228,6 +228,7 @@ class Parser
         print(condition.toString());
         result.addCondition(condition);
       }
+      lookahead = peekToken();
     }
 
     assertToken(consumeToken(), TokenType.RIGHT_PAREN);
