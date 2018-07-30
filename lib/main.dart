@@ -1,3 +1,7 @@
+import 'package:rule_engine/fact.dart';
+import 'package:rule_engine/rule.dart';
+import 'package:rule_engine/rule_engine.dart';
+
 import 'lexer.dart';
 import 'parser.dart';
 
@@ -9,18 +13,50 @@ var test = """
 String code = r"""
 rule "weekly saver"
   when
-      Expense( $1 : sum( amount ) ) over Window( start : "1969-07-20 00:00:00", length : Duration(days:2) )
+      SimpleFact( 100 < amount )
+  then
+      insert Achievement( "weekly saver", "...", Badges.2 )
+end
+
+rule "weekly saver 2"
+  when
+      SimpleFact( 20 < amount )
+  then
+      insert Achievement( "weekly saver", "...", Badges.2 )
+end
+
+rule "weekly saver for bob"
+  when
+      SimpleFact( name == "Bob" )
   then
       insert Achievement( "weekly saver", "...", Badges.2 )
 end
 """;
 
-main()
-{
+main() {
   Lexer lexer = new Lexer(code);
   var tokens = lexer.getTokenList();
   //tokens.forEach((e) => print(e) );
 
   Parser parser = new Parser(tokens);
-  parser.buildTree();
+
+  RuleEngine ruleEngine = new RuleEngine(parser.buildTree());
+
+  Fact fact = new SimpleFact("Bob", 75);
+  ruleEngine.insertFact(fact);
+}
+
+class SimpleFact extends Fact {
+  String _name;
+  int _amount;
+
+  SimpleFact(this._name, this._amount);
+
+  @override
+  Map<String, dynamic> attributeMap() {
+    Map<String, dynamic> attributes = new Map<String, dynamic>();
+    attributes["name"] = _name;
+    attributes["amount"] = _amount;
+    return attributes;
+  }
 }

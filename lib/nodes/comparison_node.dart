@@ -1,13 +1,18 @@
+import 'package:rule_engine/fact.dart';
+
 import 'node.dart';
 
-class ComparisonNode extends Node
-{
-  String _operation;
+class ComparisonNode extends Node {
+  String operation;
 
-  ComparisonNode(this._operation);
+  ComparisonNode(this.operation);
 
-  String getName()
-  {
-    return "{ComparisonNode: $_operation}";
+  String getName() {
+    return "{ComparisonNode: $operation}";
+  }
+
+  @override
+  String getValue(Map<String, dynamic> symbolTable, Fact fact) {
+    return operation;
   }
 }

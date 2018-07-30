@@ -1,7 +1,16 @@
 library rule_engine;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
+import 'package:rule_engine/fact.dart';
+import 'package:rule_engine/rule.dart';
+
+class RuleEngine {
+  List<Rule> _rules;
+
+  RuleEngine(this._rules);
+
+  void insertFact(Fact fact) {
+    for (Rule rule in _rules) {
+      rule.evaluateRule(fact);
+    }
+  }
 }
