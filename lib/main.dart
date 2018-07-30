@@ -10,32 +10,10 @@ var test = """
       Expense( \$3: sum( amount ) < \$2 ) over Duration( {days: 7}, substract( {days: 14} ) )
       Expense( \$4: sum( amount ) < \$3 ) over Duration( {days: 7}, substract( {days: 21} ) )
 """;
-String code = r"""
-rule "weekly saver"
-  when
-      SimpleFact( 100 < amount )
-  then
-      insert Achievement( "weekly saver", "...", Badges.2 )
-end
-
-rule "weekly saver 2"
-  when
-      SimpleFact( 20 < amount )
-  then
-      insert Achievement( "weekly saver", "...", Badges.2 )
-end
-
-rule "bob"
-  when
-      SimpleFact( name == "Bob", $test: 300, amount > $test )
-  then
-      insert Achievement( "weekly saver", "...", Badges.2 )
-end
-
-rule "weekly saver for bob"
+String code = r"""rule "weekly saver for bob"
   when
       SimpleFact( name == "Bob", amount > 20 )
-
+      SimpleFact( name == "Jef", amount < 0 )
   then
       insert Achievement( "weekly saver", "...", Badges.2 )
 end
@@ -52,6 +30,16 @@ main() {
 
   Fact fact = new SimpleFact("Bob", 75);
   ruleEngine.insertFact(fact);
+  fact = new SimpleFact("Ewout", 75);
+  ruleEngine.insertFact(fact);
+  fact = new SimpleFact("Lana", 75);
+  ruleEngine.insertFact(fact);
+  fact = new SimpleFact("Jef", 100);
+  ruleEngine.insertFact(fact);
+  fact = new SimpleFact("Bob", -10);
+  ruleEngine.insertFact(fact);
+  fact = new SimpleFact("Jef", -10);
+  ruleEngine.insertFact(fact);
 }
 
 class SimpleFact extends Fact {
@@ -66,5 +54,10 @@ class SimpleFact extends Fact {
     attributes["name"] = _name;
     attributes["amount"] = _amount;
     return attributes;
+  }
+
+  @override
+  String toString() {
+    return "$_name: $_amount";
   }
 }
