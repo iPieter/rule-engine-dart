@@ -13,7 +13,25 @@ class AggregateNode extends Node {
   }
 
   @override
-  String getValue(Map<String, dynamic> symbolTable, Fact fact) {
-    return "0";
+  String getValue(Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
+    switch (_operation) {
+      case "sum":
+        num sum = 0;
+        for (Fact f in facts) {
+          sum += f.attributeMap()[_attribute];
+        }
+        sum += fact.attributeMap()[_attribute];
+        return sum.toString();
+      case "average":
+        num sum = 0;
+        for (Fact f in facts) {
+          sum += f.attributeMap()[_attribute];
+        }
+        sum += fact.attributeMap()[_attribute];
+        return (sum / (facts.length + 1)).toString();
+
+        break;
+      default:
+    }
   }
 }

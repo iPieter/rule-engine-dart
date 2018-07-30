@@ -11,7 +11,7 @@ class SymbolNode extends Node {
   }
 
   @override
-  String getValue(Map<String, dynamic> symbolTable, Fact fact) {
+  String getValue(Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
     return symbolTable[_name];
   }
 }

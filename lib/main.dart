@@ -12,8 +12,7 @@ var test = """
 """;
 String code = r"""rule "weekly saver for bob"
   when
-      SimpleFact( name == "Bob", amount > 20 )
-      SimpleFact( name == "Jef", amount < 0 )
+      SimpleFact( name == "Ewout", $avg: average(amount))
   then
       insert Achievement( "weekly saver", "...", Badges.2 )
 end
@@ -28,17 +27,19 @@ main() {
 
   RuleEngine ruleEngine = new RuleEngine(parser.buildTree());
 
-  Fact fact = new SimpleFact("Bob", 75);
+  Fact fact = new SimpleFact("Bob", 0);
   ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Ewout", 75);
+  fact = new SimpleFact("Ewout", 120);
   ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Lana", 75);
+  fact = new SimpleFact("Ewout", 110);
   ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Jef", 100);
+  fact = new SimpleFact("Ewout", 90);
   ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Bob", -10);
+  fact = new SimpleFact("Ewout", 80);
   ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Jef", -10);
+  fact = new SimpleFact("Ewout", 80);
+  ruleEngine.insertFact(fact);
+  fact = new SimpleFact("Jef", 100000);
   ruleEngine.insertFact(fact);
 }
 

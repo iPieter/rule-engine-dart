@@ -10,9 +10,12 @@ class Condition {
 
   Condition(this._lhs, this._comparisonNode, this._rhs);
 
-  bool evaluateCondition(Map<String, dynamic> symbolTable, Map<String, dynamic> clauseTable, Fact fact) {
-    num lvalue = num.parse(_lhs.getValue(symbolTable, fact) ?? _lhs.getValue(clauseTable, fact), (s) {}) ?? 0;
-    num rvalue = num.parse(_rhs.getValue(symbolTable, fact) ?? _rhs.getValue(clauseTable, fact), (s) {}) ?? 0;
+  bool evaluateCondition(
+      Map<String, dynamic> symbolTable, List<Fact> facts, Map<String, dynamic> clauseTable, Fact fact) {
+    num lvalue =
+        num.parse(_lhs.getValue(symbolTable, facts, fact) ?? _lhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
+    num rvalue =
+        num.parse(_rhs.getValue(symbolTable, facts, fact) ?? _rhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
     switch (_comparisonNode.operation) {
       case "<":
         return lvalue < rvalue;
@@ -24,8 +27,8 @@ class Condition {
         return lvalue >= rvalue;
       case "==":
         return 0 ==
-            (_lhs.getValue(symbolTable, fact) ?? _lhs.getValue(clauseTable, fact))
-                .compareTo(_rhs.getValue(symbolTable, fact) ?? _rhs.getValue(clauseTable, fact));
+            (_lhs.getValue(symbolTable, facts, fact) ?? _lhs.getValue(clauseTable, facts, fact))
+                .compareTo(_rhs.getValue(symbolTable, facts, fact) ?? _rhs.getValue(clauseTable, facts, fact));
 
       default:
     }

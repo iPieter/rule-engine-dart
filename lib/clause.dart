@@ -30,7 +30,7 @@ class Clause {
   /// - And finally, conditions should match
   ///
   /// This function evaluates those requirements before returning true.
-  bool evaluateClause(Map<String, dynamic> symbolTable, Fact fact) {
+  bool evaluateClause(Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
     bool validClause = true;
     validClause = validClause && fact.runtimeType.toString() == _type;
 
@@ -38,14 +38,14 @@ class Clause {
 
     if (validClause) {
       for (var assignment in _assignments) {
-        assignment.evaluateAssignment(symbolTable, clauseTable, fact);
+        assignment.evaluateAssignment(symbolTable, clauseTable, facts, fact);
         print(symbolTable);
       }
     }
 
     Iterator<Condition> iterator = _conditions.iterator;
     while (validClause && iterator.moveNext()) {
-      validClause = validClause && iterator.current.evaluateCondition(symbolTable, clauseTable, fact);
+      validClause = validClause && iterator.current.evaluateCondition(symbolTable, facts, clauseTable, fact);
     }
 
     //now the clause should be true, in which case it will assign values, or false
