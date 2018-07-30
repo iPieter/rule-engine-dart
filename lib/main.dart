@@ -27,7 +27,7 @@ end
 
 rule "bob"
   when
-      SimpleFact( name == "Bob", $name: name, $language: "nl", $other: $language )
+      SimpleFact( name == "Bob", $test: 300, amount > $test )
   then
       insert Achievement( "weekly saver", "...", Badges.2 )
 end
@@ -37,7 +37,6 @@ rule "weekly saver for bob"
       SimpleFact( name == "Bob", amount > 20 )
 
   then
-      insert Achievement( "weekly saver", "...", Badges.2 )
       insert Achievement( "weekly saver", "...", Badges.2 )
 end
 """;

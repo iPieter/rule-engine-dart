@@ -26,26 +26,31 @@ class Clause {
   /// Each [Clause] has a few different options to evaluate:
   ///
   /// - The type of the fact should match the type of the clause
-  /// - Type conditions should match
-  /// - And finally, assignments should have no conflicts
+  /// - Assignments should have no conflicts
+  /// - And finally, conditions should match
   ///
   /// This function evaluates those requirements before returning true.
   bool evaluateClause(Map<String, dynamic> symbolTable, Fact fact) {
     bool validClause = true;
     validClause = validClause && fact.runtimeType.toString() == _type;
 
+    Map<String, dynamic> clauseTable = new Map();
+
+    if (validClause) {
+      for (var assignment in _assignments) {
+        assignment.evaluateAssignment(symbolTable, clauseTable, fact);
+        print(symbolTable);
+      }
+    }
+
     Iterator<Condition> iterator = _conditions.iterator;
     while (validClause && iterator.moveNext()) {
-      validClause =
-          validClause && iterator.current.evaluateCondition(symbolTable, fact);
+      validClause = validClause && iterator.current.evaluateCondition(symbolTable, clauseTable, fact);
     }
 
     //now the clause should be true, in which case it will assign values, or false
     if (validClause) {
-      for (var assignment in _assignments) {
-        assignment.evaluateAssignment(symbolTable, fact);
-        print(symbolTable);
-      }
+      symbolTable.addAll(clauseTable);
     }
 
     return validClause;

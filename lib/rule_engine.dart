@@ -10,7 +10,7 @@ class RuleEngine {
 
   void insertFact(Fact fact) {
     for (Rule rule in _rules) {
-      rule.evaluateRule(fact);
+      print(rule.evaluateRule(fact));
     }
   }
 }
