@@ -84,26 +84,11 @@ class Parser {
     Token rhsToken = consumeToken();
     Token lookahead = peekToken();
 
-    // Aggregate node
-    if (lookahead.type == TokenType.LEFT_PAREN) {
-      assertToken(consumeToken(), TokenType.LEFT_PAREN);
-      Token attribute = consumeToken();
-      assertToken(attribute, TokenType.IDENTIFIER);
-      assertToken(consumeToken(), TokenType.RIGHT_PAREN);
+    // finally, match the rhs
+    Node rhs = buildConditionSide(rhsToken);
 
-      SymbolNode symbolNode = new SymbolNode(clauseSubject.name);
-      AggregateNode aggregateNode =
-          new AggregateNode(rhsToken.name, attribute.name);
-      assignment = new Assignment(symbolNode, aggregateNode);
-    }
-    // Attribute node
-    else {
-      Token attribute = consumeToken();
-      assertToken(attribute, TokenType.STRING);
-      SymbolNode symbolNode = new SymbolNode(clauseSubject.name);
-      AttributeNode attributeNode = new AttributeNode(attribute.name);
-      assignment = new Assignment(symbolNode, attributeNode);
-    }
+    SymbolNode symbolNode = new SymbolNode(clauseSubject.name);
+    assignment = new Assignment(symbolNode, rhs);
 
     return assignment;
   }
@@ -192,8 +177,8 @@ class Parser {
 
       Token clauseSubject = consumeToken();
 
-      Token lookahead = peekToken();
-      if (lookahead.type == TokenType.COLON) {
+      Token ll = peekToken();
+      if (ll.type == TokenType.COLON) {
         var assignment = buildAssignment(clauseSubject);
         print(assignment.toString());
         result.addAssignment(assignment);
@@ -202,6 +187,7 @@ class Parser {
         print(condition.toString());
         result.addCondition(condition);
       }
+      lookahead = peekToken();
     }
 
     assertToken(consumeToken(), TokenType.RIGHT_PAREN);

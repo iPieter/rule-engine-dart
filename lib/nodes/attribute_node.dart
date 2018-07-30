@@ -7,7 +7,7 @@ class AttributeNode extends Node {
   AttributeNode(this._name);
 
   String getName() {
-    return "{AttributeNode: $_name}";
+    return _name;
   }
 
   @override

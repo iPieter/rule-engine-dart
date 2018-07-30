@@ -20,6 +20,19 @@ class Condition {
         num lvalue = num.parse(_lhs.getValue(symbolTable, fact)) ?? 0;
         num rvalue = num.parse(_rhs.getValue(symbolTable, fact)) ?? 0;
         return lvalue > rvalue;
+      case "<=":
+        num lvalue = num.parse(_lhs.getValue(symbolTable, fact)) ?? 0;
+        num rvalue = num.parse(_rhs.getValue(symbolTable, fact)) ?? 0;
+        return lvalue <= rvalue;
+      case ">=":
+        num lvalue = num.parse(_lhs.getValue(symbolTable, fact)) ?? 0;
+        num rvalue = num.parse(_rhs.getValue(symbolTable, fact)) ?? 0;
+        return lvalue >= rvalue;
+      case "==":
+        return 0 ==
+            _lhs
+                .getValue(symbolTable, fact)
+                .compareTo(_rhs.getValue(symbolTable, fact));
 
       default:
     }

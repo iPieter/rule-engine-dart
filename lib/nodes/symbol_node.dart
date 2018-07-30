@@ -7,7 +7,7 @@ class SymbolNode extends Node {
   SymbolNode(this._name);
 
   String getName() {
-    return "{SymbolNode: $_name}";
+    return _name;
   }
 
   @override

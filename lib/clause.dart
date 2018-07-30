@@ -40,7 +40,14 @@ class Clause {
           validClause && iterator.current.evaluateCondition(symbolTable, fact);
     }
 
-    print(validClause);
+    //now the clause should be true, in which case it will assign values, or false
+    if (validClause) {
+      for (var assignment in _assignments) {
+        assignment.evaluateAssignment(symbolTable, fact);
+        print(symbolTable);
+      }
+    }
+
     return validClause;
   }
 

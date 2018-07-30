@@ -8,7 +8,7 @@ class LiteralNode extends Node {
   LiteralNode(this._value);
 
   String getName() {
-    return "{LiteralNode: $_value}";
+    return _value;
   }
 
   @override
