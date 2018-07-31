@@ -266,8 +266,17 @@ class Parser {
     Token lookahead = peekToken();
 
     while (lookahead.type != TokenType.RIGHT_PAREN) {
-      Token arg = consumeToken();
-      result.addArgument(arg.name);
+      Token clauseSubject = consumeToken();
+      Node node;
+      RegExp numberRegExp = new RegExp(r"[0-9]+");
+
+      if (clauseSubject.name[0] == r"$")
+        node = new SymbolNode(clauseSubject.name);
+      // literal
+      else if (clauseSubject.type == TokenType.STRING ||
+          numberRegExp.stringMatch(clauseSubject.name) == clauseSubject.name)
+        node = new LiteralNode(clauseSubject.name);
+      result.addArgument(node);
 
       lookahead = peekToken();
       if (lookahead.type == TokenType.COMMA) assertToken(consumeToken(), TokenType.COMMA);

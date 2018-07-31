@@ -1,6 +1,9 @@
+import 'package:rule_engine/fact.dart';
+import 'package:rule_engine/nodes/node.dart';
+
 class Consequence {
   String _type;
-  List<String> _arguments;
+  List<Node> _arguments;
 
   Consequence(this._type) {
     _arguments = new List();
@@ -10,11 +13,17 @@ class Consequence {
     return _type;
   }
 
-  List<String> getArguments() {
-    return _arguments;
+  List<String> getArguments(Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
+    List<String> args = new List();
+
+    for (Node node in _arguments) {
+      args.add(node.getValue(symbolTable, facts, fact));
+    }
+
+    return args;
   }
 
-  addArgument(String arg) {
+  addArgument(Node arg) {
     _arguments.add(arg);
   }
 }

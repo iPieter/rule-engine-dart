@@ -50,7 +50,7 @@ class Rule {
     //finally, the rule can be considered true or false, in which case the consequence has to be executed
     if (allClausesHaveAFact && firstFact) {
       for (Function callback in callbacks) {
-        Function.apply(callback, [consequence.getType(), consequence.getArguments()]);
+        Function.apply(callback, [consequence.getType(), consequence.getArguments(_symbolTable, null, null)]);
       }
     }
 

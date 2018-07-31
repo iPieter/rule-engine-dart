@@ -13,9 +13,9 @@ var test = r"""
 """;
 String code = r"""rule "weekly saver for bob"
   when
-      SimpleFact( name == "Ewout", created in Window( start : "1969-07-20 00:00:00", end : "1999-07-20 00:00:00" ) )
+      SimpleFact( name == "Ewout", created in Window( start : "1969-07-20 00:00:00", end : "1999-07-20 00:00:00" ), $amount: amount )
   then
-      insert Achievement( "weekly saver", "...", Badges.2 )
+      insert Achievement( "weekly saver", "...", $amount )
 end
 """;
 
@@ -32,7 +32,7 @@ main() {
     print("insert $type with arguments $arguments");
   });
 
-  Fact fact = new SimpleFact("Ewout", 0, new DateTime(1996, 02, 19));
+  Fact fact = new SimpleFact("Ewout", 10, new DateTime(1996, 02, 19));
   ruleEngine.insertFact(fact);
   fact = new SimpleFact("Ewout", 120, new DateTime.now());
   ruleEngine.insertFact(fact);
