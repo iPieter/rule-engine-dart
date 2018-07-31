@@ -9,12 +9,11 @@ var test = r"""
       Expense( \$2: sum( amount ) < \$1 ) over Duration( {days: 7}, substract( {days: 7} ) )
       Expense( \$3: sum( amount ) < \$2 ) over Duration( {days: 7}, substract( {days: 14} ) )
       Expense( \$4: sum( amount ) < \$3 ) over Duration( {days: 7}, substract( {days: 21} ) )
-      SimpleFact( name == "Ewout", $avg: average(amount), created in Window( start : "1969-07-20 00:00:00", length : Duration(days:2) ) )
 
 """;
 String code = r"""rule "weekly saver for bob"
   when
-      SimpleFact( name == "Ewout" )
+      SimpleFact( name == "Ewout", created in Window( start : "1969-07-20 00:00:00", end : "1999-07-20 00:00:00" ) )
   then
       insert Achievement( "weekly saver", "...", Badges.2 )
 end
@@ -33,38 +32,30 @@ main() {
     print("insert $type with arguments $arguments");
   });
 
-  Fact fact = new SimpleFact("Bob", 0);
+  Fact fact = new SimpleFact("Ewout", 0, new DateTime(1996, 02, 19));
   ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Ewout", 120);
-  ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Ewout", 110);
-  ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Ewout", 90);
-  ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Ewout", 80);
-  ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Ewout", 80);
-  ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Jef", 100000);
+  fact = new SimpleFact("Ewout", 120, new DateTime.now());
   ruleEngine.insertFact(fact);
 }
 
 class SimpleFact extends Fact {
   String _name;
   int _amount;
+  DateTime _created;
 
-  SimpleFact(this._name, this._amount);
+  SimpleFact(this._name, this._amount, this._created);
 
   @override
   Map<String, dynamic> attributeMap() {
     Map<String, dynamic> attributes = new Map<String, dynamic>();
     attributes["name"] = _name;
     attributes["amount"] = _amount;
+    attributes["created"] = _created;
     return attributes;
   }
 
   @override
   String toString() {
-    return "$_name: $_amount";
+    return "$_name: $_amount $_created";
   }
 }

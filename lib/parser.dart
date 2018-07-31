@@ -39,14 +39,12 @@ class Parser {
 
   assertToken(Token token, TokenType type, {String value: ""}) {
     if (token.type != type) {
-      print(
-          "Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'");
+      print("Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'");
       exit(-1);
     }
     if (value != "") {
       if (token.name != value) {
-        print(
-            "Error while parsing, expected token of value '${value}', got '${token.name}' for token: '${token}'");
+        print("Error while parsing, expected token of value '${value}', got '${token.name}' for token: '${token}'");
         exit(-1);
       }
     }
@@ -60,17 +58,14 @@ class Parser {
 
   assertTokenList(Token token, List<TokenType> types, {String value: ""}) {
     bool match = false;
-    for (var i = 0; i < types.length; i++)
-      match = match || token.type == types[i];
+    for (var i = 0; i < types.length; i++) match = match || token.type == types[i];
 
     if (!match) {
-      exitWithError(
-          "Error while parsing, expected ${types.toString()}, got '${token.type}' for token: '${token}'");
+      exitWithError("Error while parsing, expected ${types.toString()}, got '${token.type}' for token: '${token}'");
     }
     if (value != "") {
       if (token.name != value) {
-        exitWithError(
-            "Error while parsing, expected '${value}', got '${token.name}' for token: '${token}'");
+        exitWithError("Error while parsing, expected '${value}', got '${token.name}' for token: '${token}'");
       }
     }
     return true;
@@ -132,7 +127,7 @@ class Parser {
     // match the comparison operator itself
     Token firstComparison = consumeToken();
 
-    if( firstComparison.name == "in" ) {
+    if (firstComparison.name == "in") {
       assertToken(firstComparison, TokenType.IDENTIFIER, value: "in");
 
       assertToken(consumeToken(), TokenType.IDENTIFIER, value: "Window");
@@ -150,14 +145,12 @@ class Parser {
           assertToken(dateStringToken, TokenType.STRING);
 
           if (t.name == "start") {
-            if (window.start != "")
-              exitWithError("Window contains more than 2 start declarations");
+            if (window.start != "") exitWithError("Window contains more than 2 start declarations");
 
             window.start = dateStringToken.name;
           }
           if (t.name == "end") {
-            if (window.end != "")
-              exitWithError("Window contains more than 2 end declarations");
+            if (window.end != "") exitWithError("Window contains more than 2 end declarations");
 
             window.end = dateStringToken.name;
           }
@@ -167,8 +160,7 @@ class Parser {
 
           Token lengthCheckToken = consumeToken();
           if (lengthCheckToken.name == "Duration") {
-            assertToken(lengthCheckToken, TokenType.IDENTIFIER,
-                value: "Duration");
+            assertToken(lengthCheckToken, TokenType.IDENTIFIER, value: "Duration");
             assertToken(consumeToken(), TokenType.LEFT_PAREN);
 
             Token ll = peekToken();
@@ -186,26 +178,22 @@ class Parser {
           } else {
             window.durationArguments["cardinal"] = lengthCheckToken.name;
           }
-          }
-          lookahead = peekToken();
-          if (lookahead.type == TokenType.COMMA)
-            assertToken(consumeToken(), TokenType.COMMA);
-          lookahead = peekToken();
         }
+        lookahead = peekToken();
+        if (lookahead.type == TokenType.COMMA) assertToken(consumeToken(), TokenType.COMMA);
+        lookahead = peekToken();
+      }
 
-        result = new Condition.fromWindow(lhs, window);
-        assertToken(consumeToken(), TokenType.RIGHT_PAREN);
+      result = new Condition.fromWindow(lhs, window);
+      assertToken(consumeToken(), TokenType.RIGHT_PAREN);
 
-        return result;
-    }
-    else {
-      assertTokenList(firstComparison,
-        [TokenType.LESS_THAN, TokenType.GREATER_THAN, TokenType.EQUALS]);
+      return result;
+    } else {
+      assertTokenList(firstComparison, [TokenType.LESS_THAN, TokenType.GREATER_THAN, TokenType.EQUALS]);
       Token lookahead = peekToken();
       if (lookahead.type == TokenType.EQUALS) {
         Token secondComparison = consumeToken();
-        comparisonNode =
-            new ComparisonNode(firstComparison.name + secondComparison.name);
+        comparisonNode = new ComparisonNode(firstComparison.name + secondComparison.name);
       } else {
         comparisonNode = new ComparisonNode(firstComparison.name);
       }
@@ -232,11 +220,11 @@ class Parser {
     Token lookahead = peekToken();
     if (lookahead.type == TokenType.COLON) {
       var assignment = buildAssignment(clauseSubject);
-      print(assignment.toString());
+      //print(assignment.toString());
       result.addAssignment(assignment);
     } else {
       var condition = buildCondition(clauseSubject);
-      print(condition.toString());
+      //print(condition.toString());
       result.addCondition(condition);
     }
 
@@ -249,11 +237,11 @@ class Parser {
       Token ll = peekToken();
       if (ll.type == TokenType.COLON) {
         var assignment = buildAssignment(clauseSubject);
-        print(assignment.toString());
+        //print(assignment.toString());
         result.addAssignment(assignment);
       } else {
         var condition = buildCondition(clauseSubject);
-        print(condition.toString());
+        //print(condition.toString());
         result.addCondition(condition);
       }
       lookahead = peekToken();
@@ -282,8 +270,7 @@ class Parser {
       result.addArgument(arg.name);
 
       lookahead = peekToken();
-      if (lookahead.type == TokenType.COMMA)
-        assertToken(consumeToken(), TokenType.COMMA);
+      if (lookahead.type == TokenType.COMMA) assertToken(consumeToken(), TokenType.COMMA);
 
       lookahead = peekToken();
     }
