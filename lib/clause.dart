@@ -37,7 +37,6 @@ class Clause {
     if (validClause) {
       for (var assignment in _assignments) {
         assignment.evaluateAssignment(symbolTable, clauseTable, facts, fact);
-        print(symbolTable);
       }
     }
 

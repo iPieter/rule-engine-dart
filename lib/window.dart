@@ -1,18 +1,15 @@
-class Window
-{
+class Window {
   String start;
   String end;
   Map<String, String> durationArguments;
 
-  Window()
-  {
+  Window() {
     start = "";
     end = "";
-    durationArguments = new Map<String,String>();
+    durationArguments = new Map<String, String>();
   }
 
-  String toString()
-  {
+  String toString() {
     return "{Window: start:$start, end:$end, duration:$durationArguments }";
   }
 }

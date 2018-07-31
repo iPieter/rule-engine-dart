@@ -19,7 +19,7 @@ class Rule {
     _matchedFacts[c] = new List();
   }
 
-  bool evaluateRule(Fact fact, List<Fact> facts) {
+  bool evaluateRule(Fact fact, List<Function> callbacks) {
     bool firstFact = false;
     Map<Clause, Fact> clauseMap = new Map();
     Map<String, dynamic> _symbolTable = new Map();
@@ -47,7 +47,12 @@ class Rule {
       allClausesHaveAFact = allClausesHaveAFact && clauseMap.containsKey(clause);
     }
 
-    print(_symbolTable);
+    //finally, the rule can be considered true or false, in which case the consequence has to be executed
+    if (allClausesHaveAFact) {
+      for (Function callback in callbacks) {
+        Function.apply(callback, [consequence.getType(), consequence.getArguments()]);
+      }
+    }
 
     return allClausesHaveAFact;
   }

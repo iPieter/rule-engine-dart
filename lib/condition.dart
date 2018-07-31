@@ -10,14 +10,14 @@ class Condition {
   Window window;
   Node _rhs;
 
-  Condition(this._lhs, this._comparisonNode, this._rhs){
+  Condition(this._lhs, this._comparisonNode, this._rhs) {
     window = null;
   }
-  Condition.fromWindow( Node lhs, Window window ) {
+  Condition.fromWindow(Node lhs, Window window) {
     _lhs = lhs;
     this.window = window;
     this._rhs = null;
-    this._comparisonNode = null;
+    this._comparisonNode = ComparisonNode("in");
   }
 
   bool evaluateCondition(
@@ -39,6 +39,7 @@ class Condition {
         return 0 ==
             (_lhs.getValue(symbolTable, facts, fact) ?? _lhs.getValue(clauseTable, facts, fact))
                 .compareTo(_rhs.getValue(symbolTable, facts, fact) ?? _rhs.getValue(clauseTable, facts, fact));
+      case "in":
 
       default:
     }

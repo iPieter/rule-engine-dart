@@ -5,15 +5,16 @@ import 'package:rule_engine/rule_engine.dart';
 import 'lexer.dart';
 import 'parser.dart';
 
-var test = """
+var test = r"""
       Expense( \$2: sum( amount ) < \$1 ) over Duration( {days: 7}, substract( {days: 7} ) )
       Expense( \$3: sum( amount ) < \$2 ) over Duration( {days: 7}, substract( {days: 14} ) )
       Expense( \$4: sum( amount ) < \$3 ) over Duration( {days: 7}, substract( {days: 21} ) )
+      SimpleFact( name == "Ewout", $avg: average(amount), created in Window( start : "1969-07-20 00:00:00", length : Duration(days:2) ) )
+
 """;
 String code = r"""rule "weekly saver for bob"
   when
-      SimpleFact( name == "Ewout", $avg: average(amount), time in Window( start : "1969-07-20 00:00:00", length : Duration(days:2) ) )
-      SimpleFact( name == "Jef" )
+      SimpleFact( name == "Ewout" )
   then
       insert Achievement( "weekly saver", "...", Badges.2 )
 end
@@ -26,9 +27,11 @@ main() {
 
   Parser parser = new Parser(tokens);
 
-  print(parser.buildTree());
-
   RuleEngine ruleEngine = new RuleEngine(parser.buildTree());
+
+  ruleEngine.registerListener((type, arguments) {
+    print("insert $type with arguments $arguments");
+  });
 
   Fact fact = new SimpleFact("Bob", 0);
   ruleEngine.insertFact(fact);
