@@ -13,7 +13,7 @@ var test = r"""
 """;
 String code = r"""rule "weekly saver for bob"
   when
-      SimpleFact( name == "Ewout", created in Window( start : "1969-07-20 00:00:00", end : "1999-07-20 00:00:00" ), $amount: amount )
+      SimpleFact( name == "Ewout", created in Window( length: Duration(seconds: 1110) ), $amount: amount )
   then
       insert Achievement( "weekly saver", "...", $amount )
 end
@@ -34,7 +34,7 @@ main() {
 
   Fact fact = new SimpleFact("Ewout", 10, new DateTime(1996, 02, 19));
   ruleEngine.insertFact(fact);
-  fact = new SimpleFact("Ewout", 120, new DateTime.now());
+  fact = new SimpleFact("Ewout", 120, new DateTime.now().subtract(new Duration(seconds: 100)));
   ruleEngine.insertFact(fact);
 }
 

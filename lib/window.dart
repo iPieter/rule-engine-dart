@@ -27,6 +27,23 @@ class Window {
     if (end != "") {
       _endTime = DateTime.parse(end);
     }
+
+    Duration duration = new Duration(
+      days: int.parse(durationArguments["days"] ?? "0"),
+      hours: int.parse(durationArguments["hours"] ?? "0"),
+      minutes: int.parse(durationArguments["minutes"] ?? "0"),
+      seconds: int.parse(durationArguments["seconds"] ?? "0"),
+      milliseconds: int.parse(durationArguments["milliseconds"] ?? "0"),
+      microseconds: int.parse(durationArguments["microseconds"] ?? "0"),
+    );
+
+    if (_beginTime == null && _endTime == null) {
+      _endTime = new DateTime.now();
+    }
+
+    if (_beginTime == null) _beginTime = _endTime.subtract(duration);
+
+    if (_endTime == null) _endTime = _beginTime.add(duration);
   }
 
   String toString() {
