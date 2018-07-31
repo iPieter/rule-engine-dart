@@ -1,5 +1,4 @@
 import 'package:rule_engine/fact.dart';
-import 'package:rule_engine/rule.dart';
 import 'package:rule_engine/rule_engine.dart';
 
 import 'lexer.dart';
@@ -11,22 +10,16 @@ var test = r"""
       Expense( \$4: sum( amount ) < \$3 ) over Duration( {days: 7}, substract( {days: 21} ) )
 
 """;
-String code = r"""rule "weekly saver for bob"
+String code = r"""rule "get amount for bob"
   when
-      SimpleFact( name == "Ewout", created in Window( length: Duration(seconds: 1110) ), $amount: amount )
+      SimpleFact( name == "Bob", created in Window( length: Duration(days: 31) ), $amount: amount )
   then
-      insert Achievement( "weekly saver", "...", $amount )
+      insert Achievement( "Bob saved some money", $amount )
 end
 """;
 
 main() {
-  Lexer lexer = new Lexer(code);
-  var tokens = lexer.getTokenList();
-  //tokens.forEach((e) => print(e) );
-
-  Parser parser = new Parser(tokens);
-
-  RuleEngine ruleEngine = new RuleEngine(parser.buildTree());
+  RuleEngine ruleEngine = new RuleEngine(code);
 
   ruleEngine.registerListener((type, arguments) {
     print("insert $type with arguments $arguments");
