@@ -12,7 +12,8 @@ var test = """
 """;
 String code = r"""rule "weekly saver for bob"
   when
-      SimpleFact( name == "Ewout", $avg: average(amount))
+      SimpleFact( name == "Ewout", $avg: average(amount), time in Window( start : "1969-07-20 00:00:00", length : Duration(days:2) ) )
+      SimpleFact( name == "Jef" )
   then
       insert Achievement( "weekly saver", "...", Badges.2 )
 end
@@ -24,6 +25,8 @@ main() {
   //tokens.forEach((e) => print(e) );
 
   Parser parser = new Parser(tokens);
+
+  print(parser.buildTree());
 
   RuleEngine ruleEngine = new RuleEngine(parser.buildTree());
 

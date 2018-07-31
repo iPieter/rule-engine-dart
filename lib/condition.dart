@@ -1,4 +1,5 @@
 import 'package:rule_engine/fact.dart';
+import 'package:rule_engine/window.dart';
 
 import 'nodes/node.dart';
 import 'nodes/comparison_node.dart';
@@ -6,9 +7,18 @@ import 'nodes/comparison_node.dart';
 class Condition {
   Node _lhs;
   ComparisonNode _comparisonNode;
+  Window window;
   Node _rhs;
 
-  Condition(this._lhs, this._comparisonNode, this._rhs);
+  Condition(this._lhs, this._comparisonNode, this._rhs){
+    window = null;
+  }
+  Condition.fromWindow( Node lhs, Window window ) {
+    _lhs = lhs;
+    this.window = window;
+    this._rhs = null;
+    this._comparisonNode = null;
+  }
 
   bool evaluateCondition(
       Map<String, dynamic> symbolTable, List<Fact> facts, Map<String, dynamic> clauseTable, Fact fact) {
@@ -37,6 +47,6 @@ class Condition {
   }
 
   String toString() {
-    return "{Condition: ${_lhs.getName()} ${_comparisonNode.getName()} ${_rhs.getName()} }";
+    return """{Condition: ${_lhs.getName()} ${_comparisonNode != null ? _comparisonNode.getName() : ""} ${ _rhs != null ? _rhs.getName() : "" } ${ window != null ? window.toString() : ""} }""";
   }
 }
