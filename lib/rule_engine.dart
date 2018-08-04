@@ -7,7 +7,6 @@ import 'package:rule_engine/rule.dart';
 
 class RuleEngine {
   List<Rule> _rules;
-  List<Fact> _facts;
   List<Function> _listeners;
 
   /// Create a new [RuleEngine] object and automatically parse the [code]
@@ -15,7 +14,6 @@ class RuleEngine {
   ///
   /// Parsing errrors are printed to stdout.
   RuleEngine(String code) {
-    _facts = new List();
     _listeners = new List();
 
     Lexer lexer = new Lexer(code);
@@ -35,7 +33,5 @@ class RuleEngine {
     for (Rule rule in _rules) {
       rule.evaluateRule(fact, _listeners);
     }
-
-    _facts.add(fact);
   }
 }

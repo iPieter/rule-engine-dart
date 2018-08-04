@@ -20,13 +20,15 @@ class Rule {
   }
 
   bool evaluateRule(Fact fact, List<Function> callbacks) {
-    bool firstFact = false;
+    bool firstFact = true;
     Map<Clause, Fact> clauseMap = new Map();
     Map<String, dynamic> _symbolTable = new Map();
 
-    for (Clause clause in _clauses) {
+    var iterator = _clauses.iterator;
+    while (firstFact && iterator.moveNext()) {
+      var clause = iterator.current;
       bool isTrueFact = clause.evaluateClause(_symbolTable, _matchedFacts[clause], fact);
-      firstFact = firstFact || isTrueFact;
+      firstFact = firstFact && isTrueFact;
 
       if (isTrueFact) {
         clauseMap[clause] = fact;
@@ -34,17 +36,20 @@ class Rule {
       }
     }
 
-    //if the inserted fact (firstFact) evaluates to true, all other facts have to find a matching value
-    for (Clause clause in _clauses) {
-      if (!clauseMap.containsKey(clause) && _matchedFacts[clause].length > 0) {
-        clauseMap[clause] = _matchedFacts[clause].first;
-      }
-    }
+    bool allClausesHaveAFact = firstFact;
 
-    //finally check of each clause has a fact
-    bool allClausesHaveAFact = true;
-    for (Clause clause in _clauses) {
-      allClausesHaveAFact = allClausesHaveAFact && clauseMap.containsKey(clause);
+    if (firstFact) {
+      //if the inserted fact (firstFact) evaluates to true, all other facts have to find a matching value
+      for (Clause clause in _clauses) {
+        if (!clauseMap.containsKey(clause) && _matchedFacts[clause].length > 0) {
+          clauseMap[clause] = _matchedFacts[clause].first;
+        }
+      }
+
+      //finally check of each clause has a fact
+      for (Clause clause in _clauses) {
+        allClausesHaveAFact = allClausesHaveAFact && clauseMap.containsKey(clause);
+      }
     }
 
     //finally, the rule can be considered true or false, in which case the consequence has to be executed
