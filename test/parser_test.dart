@@ -9,7 +9,7 @@ rule "weekly saver"
   when
       Expense( $1 : sum( amount ) in Window( start : "1969-07-20 00:00:00"), length : Duration(days:2) )
   then
-      insert Achievement( "weekly saver", "...", "Badges.2" )
+      publish Achievement( "weekly saver", "...", "Badges.2" )
 end
 """;
     String answer =

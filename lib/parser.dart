@@ -256,7 +256,7 @@ class Parser {
 
   Consequence buildConsequence() {
     Consequence result;
-    assertToken(consumeToken(), TokenType.IDENTIFIER, value: "insert");
+    assertToken(consumeToken(), TokenType.IDENTIFIER, value: "publish");
 
     Token typeToken = consumeToken();
     assertToken(typeToken, TokenType.IDENTIFIER);

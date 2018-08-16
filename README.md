@@ -8,6 +8,8 @@
 - Works even with lack of reflection in Flutter
 - Allows multiple callbacks for end results
 - Supports variables inside rules
+- Supports rolling windows on all `DateTime` objects
+- supports aggregates on all numerical attributes (sum, average, min, max)
 
 ## Getting Started
 
@@ -98,7 +100,13 @@ So each clause matches one type of fact, followed by zero or more conditions or 
 
 ### Consequence syntax
 
-Consequences are either inserted as new facts, allowing rules to generate additional facts, or published to a listener.
+Consequences are either inserted as new facts, allowing rules to generate additional facts, or published to a listener. _At the moment, only publishing is supported by using the `publish` keyword._
+
+```
+publish Achievement( "Bob saved some money", $amount )
+```
+
+So consequences start with the `insert` or `publish` keyword, followed by the type of object and a list of attributes, like in the constructor. As seen in the above example, declared symbols are available from of the rule symbol table.
 
 ## Example
 
@@ -120,3 +128,23 @@ ruleEngine.registerListener((type, arguments) {
   print("insert $type with arguments $arguments");
 });
 ```
+
+## FAQ
+
+### Why a rule engine for dart?
+
+Rule engines are very suitable for writing business logic in a central location. This makes it easier to maintain and usually less like [spaghetti code](https://en.wikipedia.org/wiki/Spaghetti_code). In our case, we wanted a rule engine for checking if a user has earned an achievement. This makes it easy to separate each achievement as a separate rule, without impacting the flow of the application.
+
+In the case of dart, no public rule engine was/is available at the moment this project started.
+
+### What's up with that inheritance?
+
+Dart—or at Flutter to be precise—has no support for reflection, which is needed for autonomous evaluation of those facts, and also to create new objects as consequences. Since this is aimed at Flutter, this uses inheritance. One benefit, no need to worry about what is accessible and what not, since you decide explicitly.
+
+### Are there alternatives?
+
+For dart, at the moment (aug. 2018), no. For other languages, yes. A totally incomplete list of some I've used:
+
+- **Drools**: For Java, probably the most known engine. Uses traditionally a very efficient implementation of RETE, or even LEAPS in newer releases.
+
+- **CHR**: A rule rewriting system, implementations for Prolog, Java, C, C++, JavaScript, ... are available.

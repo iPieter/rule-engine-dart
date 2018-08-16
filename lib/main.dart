@@ -10,14 +10,14 @@ String code1 = r"""rule "get amount for bob"
   when
       SimpleFact( name == "Bob", created in Window( length: Duration(days: 31) ), $amount: amount )
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 """;
 String code2 = r"""rule "1"
   when
       SimpleFact( name == "Bob", created in Window( length: Duration(days: 31) ), $amount: amount )
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 
 rule "2"
@@ -25,7 +25,7 @@ rule "2"
       SimpleFact( name == "Bob", created in Window( length: Duration(days: 31) ), $amount: amount )
       SimpleFact( name == "Jef", amount > 100)
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 
 rule "3"
@@ -33,7 +33,7 @@ rule "3"
       SimpleFact( name == "Bob", created in Window( length: Duration(days: 31) ), $amount: amount )
       SimpleFact( name == "Jef", amount > 200)
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 
 rule "4"
@@ -42,7 +42,7 @@ rule "4"
       SimpleFact( name == "Jef", amount > 200)
       SimpleFact( name == "Ewout", amount == 0)
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 
 rule "5"
@@ -51,7 +51,7 @@ rule "5"
       SimpleFact( name == "Jef", amount > 200)
       SimpleFact( name == "Bobbie", amount > $amount)
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 
 rule "6"
@@ -59,14 +59,14 @@ rule "6"
       SimpleFact( name == "Bob", created in Window( length: Duration(days: 31) ), $amount: amount )
       SimpleFact( name == "Jef", amount > $amount)
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 
 rule "7"
   when
       SimpleFact( name == "Isisdorius", amount > 10000)
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 
 rule "8"
@@ -74,7 +74,7 @@ rule "8"
       SimpleFact( name == "Bob", created in Window( length: Duration(days: 31) ), $amount: amount )
       SimpleFact( name == "Jef", amount < $amount)
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 
 rule "9"
@@ -84,7 +84,7 @@ rule "9"
       SimpleFact( name == "Bobbie", amount > $amount)
       SimpleFact( name == "Jos", amount > $amount)
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 
 rule "10"
@@ -92,7 +92,7 @@ rule "10"
       SimpleFact( name == "Bob", created in Window( length: Duration(days: 31) ) )
       SimpleFact( name == "Jef", amount == 10)
   then
-      insert Achievement( "Bob saved some money", $amount )
+      publish Achievement( "Bob saved some money", $amount )
 end
 """;
 
