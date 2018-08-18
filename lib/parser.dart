@@ -39,7 +39,8 @@ class Parser {
 
   assertToken(Token token, TokenType type, {String value: ""}) {
     if (token.type != type) {
-      exitWithError("Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'");
+      exitWithError(
+          "Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'");
     }
     if (value != "") {
       if (token.name != value) {
@@ -57,14 +58,17 @@ class Parser {
 
   assertTokenList(Token token, List<TokenType> types, {String value: ""}) {
     bool match = false;
-    for (var i = 0; i < types.length; i++) match = match || token.type == types[i];
+    for (var i = 0; i < types.length; i++)
+      match = match || token.type == types[i];
 
     if (!match) {
-      exitWithError("Error while parsing, expected ${types.toString()}, got '${token.type}' for token: '${token}'");
+      exitWithError(
+          "Error while parsing, expected ${types.toString()}, got '${token.type}' for token: '${token}'");
     }
     if (value != "") {
       if (token.name != value) {
-        exitWithError("Error while parsing, expected '${value}', got '${token.name}' for token: '${token}'");
+        exitWithError(
+            "Error while parsing, expected '${value}', got '${token.name}' for token: '${token}'");
       }
     }
     return true;
@@ -144,12 +148,14 @@ class Parser {
           assertToken(dateStringToken, TokenType.STRING);
 
           if (t.name == "start") {
-            if (window.start != "") exitWithError("Window contains more than 2 start declarations");
+            if (window.start != "")
+              exitWithError("Window contains more than 2 start declarations");
 
             window.start = dateStringToken.name;
           }
           if (t.name == "end") {
-            if (window.end != "") exitWithError("Window contains more than 2 end declarations");
+            if (window.end != "")
+              exitWithError("Window contains more than 2 end declarations");
 
             window.end = dateStringToken.name;
           }
@@ -159,7 +165,8 @@ class Parser {
 
           Token lengthCheckToken = consumeToken();
           if (lengthCheckToken.name == "Duration") {
-            assertToken(lengthCheckToken, TokenType.IDENTIFIER, value: "Duration");
+            assertToken(lengthCheckToken, TokenType.IDENTIFIER,
+                value: "Duration");
             assertToken(consumeToken(), TokenType.LEFT_PAREN);
 
             Token ll = peekToken();
@@ -179,7 +186,8 @@ class Parser {
           }
         }
         lookahead = peekToken();
-        if (lookahead.type == TokenType.COMMA) assertToken(consumeToken(), TokenType.COMMA);
+        if (lookahead.type == TokenType.COMMA)
+          assertToken(consumeToken(), TokenType.COMMA);
         lookahead = peekToken();
       }
 
@@ -188,17 +196,20 @@ class Parser {
 
       return result;
     } else {
-      assertTokenList(firstComparison, [TokenType.LESS_THAN, TokenType.GREATER_THAN, TokenType.EQUALS]);
+      assertTokenList(firstComparison,
+          [TokenType.LESS_THAN, TokenType.GREATER_THAN, TokenType.EQUALS]);
       Token lookahead = peekToken();
       if (lookahead.type == TokenType.EQUALS) {
         Token secondComparison = consumeToken();
         assertToken(secondComparison, TokenType.EQUALS);
-        comparisonNode = new ComparisonNode(firstComparison.name + secondComparison.name);
+        comparisonNode =
+            new ComparisonNode(firstComparison.name + secondComparison.name);
       } else {
         if (firstComparison.type == TokenType.EQUALS) {
           Token secondComparison = consumeToken();
           assertToken(secondComparison, TokenType.EQUALS);
-          comparisonNode = new ComparisonNode(firstComparison.name + secondComparison.name);
+          comparisonNode =
+              new ComparisonNode(firstComparison.name + secondComparison.name);
         } else {
           comparisonNode = new ComparisonNode(firstComparison.name);
         }
@@ -292,7 +303,8 @@ class Parser {
       result.addArgument(node);
 
       lookahead = peekToken();
-      if (lookahead.type == TokenType.COMMA) assertToken(consumeToken(), TokenType.COMMA);
+      if (lookahead.type == TokenType.COMMA)
+        assertToken(consumeToken(), TokenType.COMMA);
 
       lookahead = peekToken();
     }
