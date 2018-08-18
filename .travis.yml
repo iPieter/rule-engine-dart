@@ -5,7 +5,7 @@ dart:
   - stable
 
 dart_task:
-  - test: --platform vm,chrome
+  - test: --platform vm
 
 matrix:
   include:
