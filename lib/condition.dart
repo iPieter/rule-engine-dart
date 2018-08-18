@@ -20,39 +20,66 @@ class Condition {
     this._comparisonNode = new ComparisonNode("in");
   }
 
-  bool evaluateCondition(
-      Map<String, dynamic> symbolTable, List<Fact> facts, Map<String, dynamic> clauseTable, Fact fact) {
+  bool evaluateCondition(Map<String, dynamic> symbolTable, List<Fact> facts,
+      Map<String, dynamic> clauseTable, Fact fact) {
     switch (_comparisonNode.operation) {
       case "<":
-        num lvalue =
-            num.parse(_lhs.getValue(symbolTable, facts, fact) ?? _lhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
-        num rvalue =
-            num.parse(_rhs.getValue(symbolTable, facts, fact) ?? _rhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
+        num lvalue = num.parse(
+                _lhs.getValue(symbolTable, facts, fact) ??
+                    _lhs.getValue(clauseTable, facts, fact),
+                (s) {}) ??
+            0;
+        num rvalue = num.parse(
+                _rhs.getValue(symbolTable, facts, fact) ??
+                    _rhs.getValue(clauseTable, facts, fact),
+                (s) {}) ??
+            0;
         return lvalue < rvalue;
       case ">":
-        num lvalue =
-            num.parse(_lhs.getValue(symbolTable, facts, fact) ?? _lhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
-        num rvalue =
-            num.parse(_rhs.getValue(symbolTable, facts, fact) ?? _rhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
+        num lvalue = num.parse(
+                _lhs.getValue(symbolTable, facts, fact) ??
+                    _lhs.getValue(clauseTable, facts, fact),
+                (s) {}) ??
+            0;
+        num rvalue = num.parse(
+                _rhs.getValue(symbolTable, facts, fact) ??
+                    _rhs.getValue(clauseTable, facts, fact),
+                (s) {}) ??
+            0;
         return lvalue > rvalue;
       case "<=":
-        num lvalue =
-            num.parse(_lhs.getValue(symbolTable, facts, fact) ?? _lhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
-        num rvalue =
-            num.parse(_rhs.getValue(symbolTable, facts, fact) ?? _rhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
+        num lvalue = num.parse(
+                _lhs.getValue(symbolTable, facts, fact) ??
+                    _lhs.getValue(clauseTable, facts, fact),
+                (s) {}) ??
+            0;
+        num rvalue = num.parse(
+                _rhs.getValue(symbolTable, facts, fact) ??
+                    _rhs.getValue(clauseTable, facts, fact),
+                (s) {}) ??
+            0;
         return lvalue <= rvalue;
       case ">=":
-        num lvalue =
-            num.parse(_lhs.getValue(symbolTable, facts, fact) ?? _lhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
-        num rvalue =
-            num.parse(_rhs.getValue(symbolTable, facts, fact) ?? _rhs.getValue(clauseTable, facts, fact), (s) {}) ?? 0;
+        num lvalue = num.parse(
+                _lhs.getValue(symbolTable, facts, fact) ??
+                    _lhs.getValue(clauseTable, facts, fact),
+                (s) {}) ??
+            0;
+        num rvalue = num.parse(
+                _rhs.getValue(symbolTable, facts, fact) ??
+                    _rhs.getValue(clauseTable, facts, fact),
+                (s) {}) ??
+            0;
         return lvalue >= rvalue;
       case "==":
         return 0 ==
-            (_lhs.getValue(symbolTable, facts, fact) ?? _lhs.getValue(clauseTable, facts, fact))
-                .compareTo(_rhs.getValue(symbolTable, facts, fact) ?? _rhs.getValue(clauseTable, facts, fact));
+            (_lhs.getValue(symbolTable, facts, fact) ??
+                    _lhs.getValue(clauseTable, facts, fact))
+                .compareTo(_rhs.getValue(symbolTable, facts, fact) ??
+                    _rhs.getValue(clauseTable, facts, fact));
       case "in":
-        String lvalue = _lhs.getValue(symbolTable, facts, fact) ?? _lhs.getValue(clauseTable, facts, fact);
+        String lvalue = _lhs.getValue(symbolTable, facts, fact) ??
+            _lhs.getValue(clauseTable, facts, fact);
         return window.contains(DateTime.parse(lvalue));
 
       default:

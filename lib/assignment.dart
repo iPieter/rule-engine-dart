@@ -9,9 +9,10 @@ class Assignment {
 
   Assignment(this._symbolNode, this._rhs);
 
-  bool evaluateAssignment(
-      Map<String, dynamic> symbolTable, Map<String, dynamic> clauseTable, List<Fact> facts, Fact fact) {
-    if (symbolTable.containsKey(_symbolNode.getName()) || clauseTable.containsKey(_symbolNode.getName())) {
+  bool evaluateAssignment(Map<String, dynamic> symbolTable,
+      Map<String, dynamic> clauseTable, List<Fact> facts, Fact fact) {
+    if (symbolTable.containsKey(_symbolNode.getName()) ||
+        clauseTable.containsKey(_symbolNode.getName())) {
       print(
           "Execution error: The symbol '${_symbolNode.getName()} is already assigned, double assignments are not allowed.");
       return false;
@@ -26,7 +27,8 @@ class Assignment {
     }
 
     clauseTable[_symbolNode.getName()] =
-        _rhs.getValue(symbolTable, facts, fact) ?? _rhs.getValue(clauseTable, facts, fact);
+        _rhs.getValue(symbolTable, facts, fact) ??
+            _rhs.getValue(clauseTable, facts, fact);
 
     return true;
   }

@@ -1,13 +1,11 @@
 import 'token.dart';
 
-class Lexer
-{
+class Lexer {
   int _pos;
   String _code;
   Map<String, TokenType> _tokenTypeMap;
 
-  Lexer(this._code)
-  {
+  Lexer(this._code) {
     _pos = 0;
     _tokenTypeMap = new Map();
     _tokenTypeMap['('] = TokenType.LEFT_PAREN;
@@ -28,68 +26,59 @@ class Lexer
     _tokenTypeMap[','] = TokenType.COMMA;
   }
 
-  consumeChar()
-  {
-    if( _pos + 1 > _code.length )
+  consumeChar() {
+    if (_pos + 1 > _code.length)
       return '';
     else
       return _code[_pos++];
   }
 
-  peekChar()
-  {
-    if( _pos + 1 > _code.length )
+  peekChar() {
+    if (_pos + 1 > _code.length)
       return '';
     else
       return _code[_pos];
   }
 
-  
-
-  List<Token> getTokenList()
-  {
+  List<Token> getTokenList() {
     var result = new List<Token>();
 
     RegExp whitespace = new RegExp(r"\s");
     RegExp identifier = new RegExp(r"\w");
 
     var c = '';
-    while( _pos + 1 < _code.length )
-    {
+    while (_pos + 1 < _code.length) {
       c = consumeChar();
 
-      if( _tokenTypeMap.containsKey(c) )
-        result.add( new Token(_tokenTypeMap[c], c, _pos - 1 ) );
-      else
-      {
-        switch( c )
-        {
+      if (_tokenTypeMap.containsKey(c))
+        result.add(new Token(_tokenTypeMap[c], c, _pos - 1));
+      else {
+        switch (c) {
           case '':
             return result;
             break;
           case '"':
             var tokenName = "";
             var start = _pos - 1;
-            while ( (c = consumeChar()) != "\"" ) {
+            while ((c = consumeChar()) != "\"") {
               tokenName += c;
             }
-            result.add( new Token(TokenType.STRING, tokenName, start) );
+            result.add(new Token(TokenType.STRING, tokenName, start));
             break;
           default:
-            if( !whitespace.hasMatch(c) )
-            {
+            if (!whitespace.hasMatch(c)) {
               var tokenName = "" + c;
               var start = _pos - 1;
 
-              while ( (c = peekChar()) != "\"" && identifier.hasMatch(c) ) {
+              while ((c = peekChar()) != "\"" && identifier.hasMatch(c)) {
                 tokenName += consumeChar();
               }
-              result.add( new Token(TokenType.IDENTIFIER, tokenName, start) );
+              result.add(new Token(TokenType.IDENTIFIER, tokenName, start));
             }
             break;
-          }
         }
       }
-      return result;
+    }
+    return result;
   }
 }

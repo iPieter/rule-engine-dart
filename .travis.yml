@@ -10,8 +10,8 @@ dart_task:
 matrix:
   include:
     # Only validate formatting using the dev release
-    #- dart: dev
-    #  dart_task: dartfmt
+    - dart: dev
+      dart_task: dartfmt
     - dart: dev
       dart_task: analyzer
 

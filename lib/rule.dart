@@ -27,7 +27,8 @@ class Rule {
     var iterator = _clauses.iterator;
     while (firstFact && iterator.moveNext()) {
       var clause = iterator.current;
-      bool isTrueFact = clause.evaluateClause(_symbolTable, _matchedFacts[clause], fact);
+      bool isTrueFact =
+          clause.evaluateClause(_symbolTable, _matchedFacts[clause], fact);
       firstFact = firstFact && isTrueFact;
 
       if (isTrueFact) {
@@ -41,21 +42,26 @@ class Rule {
     if (firstFact) {
       //if the inserted fact (firstFact) evaluates to true, all other facts have to find a matching value
       for (Clause clause in _clauses) {
-        if (!clauseMap.containsKey(clause) && _matchedFacts[clause].length > 0) {
+        if (!clauseMap.containsKey(clause) &&
+            _matchedFacts[clause].length > 0) {
           clauseMap[clause] = _matchedFacts[clause].first;
         }
       }
 
       //finally check of each clause has a fact
       for (Clause clause in _clauses) {
-        allClausesHaveAFact = allClausesHaveAFact && clauseMap.containsKey(clause);
+        allClausesHaveAFact =
+            allClausesHaveAFact && clauseMap.containsKey(clause);
       }
     }
 
     //finally, the rule can be considered true or false, in which case the consequence has to be executed
     if (allClausesHaveAFact && firstFact) {
       for (Function callback in callbacks) {
-        Function.apply(callback, [consequence.getType(), consequence.getArguments(_symbolTable, null, null)]);
+        Function.apply(callback, [
+          consequence.getType(),
+          consequence.getArguments(_symbolTable, null, null)
+        ]);
       }
     }
 

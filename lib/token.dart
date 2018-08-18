@@ -1,22 +1,30 @@
-enum TokenType
-{
-  LEFT_BRACKET, RIGHT_BRACKET, LEFT_PAREN, RIGHT_PAREN, 
-  IDENTIFIER, STRING,
-  PLUS, MINUS, MULTIPLY, DIVIDE,
-  EQUALS, LESS_THAN, GREATER_THAN, COLON, DOT, COMMA
-
+enum TokenType {
+  LEFT_BRACKET,
+  RIGHT_BRACKET,
+  LEFT_PAREN,
+  RIGHT_PAREN,
+  IDENTIFIER,
+  STRING,
+  PLUS,
+  MINUS,
+  MULTIPLY,
+  DIVIDE,
+  EQUALS,
+  LESS_THAN,
+  GREATER_THAN,
+  COLON,
+  DOT,
+  COMMA
 }
 
-class Token
-{
+class Token {
   TokenType _type;
   String _name;
   int _pos;
 
-  Token(this._type, this._name, this._pos );
+  Token(this._type, this._name, this._pos);
 
-  toString()
-  {
+  toString() {
     return "{$_type:$_name @ pos $_pos}";
   }
 

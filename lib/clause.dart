@@ -29,7 +29,8 @@ class Clause {
   /// - And finally, conditions should match
   ///
   /// This function evaluates those requirements before returning true.
-  bool evaluateClause(Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
+  bool evaluateClause(
+      Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
     bool validClause = true;
     validClause = validClause && fact.runtimeType.toString() == _type;
 
@@ -43,7 +44,9 @@ class Clause {
 
     Iterator<Condition> iterator = _conditions.iterator;
     while (validClause && iterator.moveNext()) {
-      validClause = validClause && iterator.current.evaluateCondition(symbolTable, facts, clauseTable, fact);
+      validClause = validClause &&
+          iterator.current
+              .evaluateCondition(symbolTable, facts, clauseTable, fact);
     }
 
     //when the clause is negated, no symbols will be stored and the entire clause will yield the oposite value

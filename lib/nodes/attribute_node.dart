@@ -11,7 +11,8 @@ class AttributeNode extends Node {
   }
 
   @override
-  String getValue(Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
+  String getValue(
+      Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
     return fact.attributeMap()[_name].toString();
   }
 }

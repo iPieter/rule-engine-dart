@@ -13,7 +13,8 @@ class Consequence {
     return _type;
   }
 
-  List<String> getArguments(Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
+  List<String> getArguments(
+      Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
     List<String> args = new List();
 
     for (Node node in _arguments) {

@@ -113,7 +113,8 @@ main() {
       ruleEngine.insertFact(fact);
 
       for (var i = 0; i < pow(10, j); i++) {
-        fact = new SimpleFact("Ewout", 120, new DateTime.now().subtract(new Duration(seconds: 100)));
+        fact = new SimpleFact("Ewout", 120,
+            new DateTime.now().subtract(new Duration(seconds: 100)));
         ruleEngine.insertFact(fact);
       }
 
