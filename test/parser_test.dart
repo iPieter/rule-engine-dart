@@ -59,5 +59,5 @@ end
 void main() {
   test('Basic test: one rule with one clause', _basicTest);
   test('Negation test with one rule with one clause', _notTest);
-  //test('Invalid symbol for assignment', _invalidAssignmentTest);
+  test('Invalid symbol for assignment', _invalidAssignmentTest);
 }

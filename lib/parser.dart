@@ -192,9 +192,19 @@ class Parser {
       Token lookahead = peekToken();
       if (lookahead.type == TokenType.EQUALS) {
         Token secondComparison = consumeToken();
+        assertToken(secondComparison, TokenType.EQUALS );
         comparisonNode = new ComparisonNode(firstComparison.name + secondComparison.name);
       } else {
-        comparisonNode = new ComparisonNode(firstComparison.name);
+        if(firstComparison.type == TokenType.EQUALS)
+        {
+          Token secondComparison = consumeToken();
+          assertToken(secondComparison, TokenType.EQUALS );  
+          comparisonNode = new ComparisonNode(firstComparison.name + secondComparison.name);
+        }
+        else
+        {
+          comparisonNode = new ComparisonNode(firstComparison.name);
+        }
       }
     }
 
