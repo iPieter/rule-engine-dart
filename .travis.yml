@@ -1,5 +1,6 @@
 language: dart
-
+dart:
+  # Install a specific stable release - 1.15.0
 # Gives more resources on Travis (8GB Ram, 2 CPUs).
 # Do not remove without verifying w/ Travis.
 sudo: required
