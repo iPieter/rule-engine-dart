@@ -209,15 +209,22 @@ class Parser {
   }
 
   Clause buildClause() {
+    Token lookahead = peekToken();
+    bool negated = false;
+    if (lookahead.type == TokenType.IDENTIFIER && lookahead.name == "not") {
+      assertToken(consumeToken(), TokenType.IDENTIFIER);
+      negated = true;
+    }
+
     Token typeToken;
     assertToken(typeToken = consumeToken(), TokenType.IDENTIFIER);
     assertToken(consumeToken(), TokenType.LEFT_PAREN);
 
-    Clause result = new Clause(typeToken.name);
+    Clause result = new Clause(typeToken.name, negated);
 
     Token clauseSubject = consumeToken();
 
-    Token lookahead = peekToken();
+    lookahead = peekToken();
     if (lookahead.type == TokenType.COLON) {
       var assignment = buildAssignment(clauseSubject);
       //print(assignment.toString());

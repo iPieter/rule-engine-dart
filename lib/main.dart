@@ -8,7 +8,7 @@ import 'parser.dart';
 
 String code1 = r"""rule "get amount for bob"
   when
-      SimpleFact( name == "Bob", created in Window( length: Duration(days: 31) ), $amount: amount )
+      not SimpleFact( name == "Bob", $name: name )
   then
       publish Achievement( "Bob saved some money", $amount )
 end
@@ -97,7 +97,7 @@ end
 """;
 
 main() {
-  for (var code in [code1, code2]) {
+  for (var code in [code1]) {
     print(code.substring(0, 20));
 
     for (var j = 0; j < 8; j++) {

@@ -7,8 +7,9 @@ class Clause {
   String _type;
   List<Assignment> _assignments;
   List<Condition> _conditions;
+  bool _negated;
 
-  Clause(this._type) {
+  Clause(this._type, this._negated) {
     _assignments = new List();
     _conditions = new List();
   }
@@ -44,6 +45,9 @@ class Clause {
     while (validClause && iterator.moveNext()) {
       validClause = validClause && iterator.current.evaluateCondition(symbolTable, facts, clauseTable, fact);
     }
+
+    //when the clause is negated, no symbols will be stored and the entire clause will yield the oposite value
+    validClause = _negated ? !validClause : validClause;
 
     //now the clause should be true, in which case it will assign values, or false
     if (validClause) {

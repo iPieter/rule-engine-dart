@@ -39,7 +39,7 @@ rule "<name>"
 end
 ```
 
-A detailed overview of the syntax in BHNF and with railroad diagrams can be found in `syntax.xhtml`.
+A detailed overview of the syntax in BNF and with railroad diagrams can be found in `syntax.xhtml`.
 
 ### Clause syntax
 
