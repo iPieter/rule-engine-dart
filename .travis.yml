@@ -1,4 +1,7 @@
 language: dart
+dart:
+  # Install a specific stable release - 1.15.0
+  - "1.24.3"
 dart_task:
   - test: --platform vm
     install_dartium: true
