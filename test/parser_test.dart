@@ -85,7 +85,7 @@ void _negativeLiterals() {
   String code = r"""
 rule "weekly saver"
   when
-      Expense( amount > -10.0 )
+      Expense( amount > -10 )
   then
       publish Achievement( "test" )
 end
