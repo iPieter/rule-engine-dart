@@ -13,10 +13,11 @@ class Lexer {
     _tokenTypeMap['{'] = TokenType.LEFT_BRACKET;
     _tokenTypeMap['}'] = TokenType.RIGHT_BRACKET;
 
+    /*
     _tokenTypeMap['+'] = TokenType.PLUS;
     _tokenTypeMap['-'] = TokenType.MINUS;
     _tokenTypeMap['*'] = TokenType.MULTIPLY;
-    _tokenTypeMap['/'] = TokenType.DIVIDE;
+    _tokenTypeMap['/'] = TokenType.DIVIDE;*/
 
     _tokenTypeMap['='] = TokenType.EQUALS;
     _tokenTypeMap[':'] = TokenType.COLON;
