@@ -88,11 +88,11 @@ So each clause matches one type of fact, followed by zero or more conditions or 
   This is the most simple syntax and takes a window starting 31 days ago and ending now. The length can be defined with a duration object, just like in dart.
 
   ```
-  SimpleFact( created in Window( begin: "1969-07-20 00:00:00", length: Duration( days: 31 ) ) )
+  SimpleFact( created in Window( start: "1969-07-20 00:00:00", length: Duration( days: 31 ) ) )
   SimpleFact( created in Window( end: "2018-07-20 23:59:59",length: Duration( days: 31 ) ) )
   ```
 
-  As is seen in the above example, both begin and end times can be specified. Currently, this is as a string that can be parsed by dart's `DateTime` constructor. Future work is to provide the entire dateTime-api, but feel free to fork it. ;-)
+  As is seen in the above example, both start and end times can be specified. Currently, this is as a string that can be parsed by dart's `DateTime` constructor. Future work is to provide the entire dateTime-api, but feel free to fork it. ;-)
 
 - **Aggregates**: when multiple facts match one clause, these can be combined to one evaluation. The result can be used as a regular condition, or an assignment. Inside the aggregate, only attributes are allowed.
   ```
