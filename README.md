@@ -1,5 +1,7 @@
 # rule_engine
 
+[![Build Status](https://travis-ci.org/iPieter/rule_engine_dart.svg?branch=master)](https://travis-ci.org/iPieter/rule_engine_dart)
+
 ## Features
 
 - Brings production rules with a drools-like syntax to Dart and Flutter
@@ -97,6 +99,18 @@ So each clause matches one type of fact, followed by zero or more conditions or 
   SimpleFact( sum( amount ) > 1000 )
   ```
   This will evaluate to true if the sum of all matching facts is over 1000. In addition to the `sum()` operation, ~~`min()`, `max()`~~ _(not yet implemented)_ and `average()` are available as well.
+
+In addition to these elements of a clause, they can also be negated. This means a clause will fail if a fact matching the entire clause is present, allowing it to halt the entire rule.
+
+```
+rule "weekly saver"
+  when
+      Expense( category == "Cheese" )
+      not Expense( amount > 10, category == "Cheese" )
+  then
+      publish Achievement( "no expense over 10 usd" )
+end
+```
 
 ### Consequence syntax
 
