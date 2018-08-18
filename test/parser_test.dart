@@ -85,7 +85,7 @@ void _negativeLiterals() {
   String code = r"""
 rule "weekly saver"
   when
-      Expense( amount > -10 )
+      Expense( amount > -10.0 )
   then
       publish Achievement( "test" )
 end
@@ -93,6 +93,7 @@ end
   Lexer lexer = new Lexer(code);
   Parser parser = new Parser(lexer.getTokenList());
   var result = parser.buildTree();
+  print(result[0]);
   expect(result.length, equals(1));
 }
 
