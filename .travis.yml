@@ -1,12 +1,10 @@
 language: dart
 dart:
-  # Install a specific stable release
   - "1.24.3"
+
 # Gives more resources on Travis (8GB Ram, 2 CPUs).
 # Do not remove without verifying w/ Travis.
 sudo: required
-addons:
-  chrome: stable
 
 # Build stages: https://docs.travis-ci.com/user/build-stages/.
 stages:
@@ -41,15 +39,3 @@ jobs:
 # Only building master means that we don't run two builds for each pull request.
 branches:
   only: [master]
-
-# Incremental pub cache and builds.
-cache:
-  directories:
-    - $HOME/.pub-cache
-    - .dart_tool
-
-# Necessary for Chrome and Firefox to run
-before_install:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - "t=0; until (xdpyinfo -display :99 &> /dev/null || test $t -gt 10); do sleep 1; let t=$t+1; done"
