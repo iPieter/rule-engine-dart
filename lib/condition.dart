@@ -89,6 +89,6 @@ class Condition {
   }
 
   String toString() {
-    return """{Condition: ${_lhs.getName()} ${_comparisonNode != null ? _comparisonNode.getName() : ""} ${ _rhs != null ? _rhs.getName() : "" } ${ window != null ? window.toString() : ""} }""";
+    return """{Condition: ${_lhs.getName()} ${_comparisonNode != null ? _comparisonNode.getName() : ""} ${_rhs != null ? _rhs.getName() : ""} ${window != null ? window.toString() : ""} }""";
   }
 }
