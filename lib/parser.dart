@@ -39,13 +39,12 @@ class Parser {
 
   assertToken(Token token, TokenType type, {String value: ""}) {
     if (token.type != type) {
-      print("Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'");
-      exit(-1);
+      exitWithError("Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'");
     }
     if (value != "") {
       if (token.name != value) {
-        print("Error while parsing, expected token of value '${value}', got '${token.name}' for token: '${token}'");
-        exit(-1);
+        exitWithError(
+            "Error while parsing, expected token of value '${value}', got '${token.name}' for token: '${token}'");
       }
     }
     return true;
@@ -53,7 +52,7 @@ class Parser {
 
   exitWithError(String error) {
     print(error);
-    exit(-1);
+    throw new Error();
   }
 
   assertTokenList(Token token, List<TokenType> types, {String value: ""}) {
