@@ -1,0 +1,4 @@
+language: dart
+dart_task:
+  - test: --platform vm
+    install_dartium: true
