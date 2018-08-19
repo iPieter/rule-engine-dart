@@ -3,9 +3,6 @@ import 'dart:math';
 import 'package:rule_engine/fact.dart';
 import 'package:rule_engine/rule_engine.dart';
 
-import 'lexer.dart';
-import 'parser.dart';
-
 String code1 = r"""rule "get amount for bob"
   when
       not SimpleFact( name == "Bob", $name: name )

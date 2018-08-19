@@ -1,0 +1,15 @@
+name: performance
+description: Evaluation of the performance of the rule engine package
+# version: 1.0.0
+# homepage: https://www.example.com
+# author: Pieter Delobelle <pieter.delobelle@gmail.com>
+
+environment:
+  sdk: ">=1.15.0 <3.0.0"
+
+dependencies:
+  rule_engine:
+    path: ../../
+
+dev_dependencies:
+  test: ^1.0.0
