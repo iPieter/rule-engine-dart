@@ -36,12 +36,19 @@ class AggregateNode extends Node {
           if (min > f.attributeMap()[_attribute])
             min = f.attributeMap()[_attribute];
         }
+
+        if (min > fact.attributeMap()[_attribute]) {
+          min = fact.attributeMap()[_attribute];
+        }
         return min.toString();
       case "max":
         num max = double.negativeInfinity;
         for (Fact f in facts) {
           if (max < f.attributeMap()[_attribute])
             max = f.attributeMap()[_attribute];
+        }
+        if (max < fact.attributeMap()[_attribute]) {
+          max = fact.attributeMap()[_attribute];
         }
         return max.toString();
 

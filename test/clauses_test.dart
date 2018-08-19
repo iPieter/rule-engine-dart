@@ -25,8 +25,56 @@ end
   expect(results.length, equals(2));
 }
 
+void _minTest() {
+  String code = r"""
+rule "weekly saver"
+  when
+      SimpleFact( name == "Bob", $value: min( amount ) )
+  then
+      publish Test( $value )
+end
+""";
+  var ruleEngine = new RuleEngine(code);
+
+  var results = new List();
+  ruleEngine.registerListener((t, a) {
+    results.add(a[0]);
+  });
+
+  ruleEngine.insertFact(new SimpleFact("Bob", 11, new DateTime.now()));
+  expect(num.tryParse(results[0]), equals(11));
+
+  ruleEngine.insertFact(new SimpleFact("Bob", 12, new DateTime.now()));
+  expect(num.tryParse(results[1]), equals(11));
+}
+
+void _maxTest() {
+  String code = r"""
+rule "weekly saver"
+  when
+      SimpleFact( name == "Bob", $value: max( amount ) )
+  then
+      publish Test( $value )
+end
+""";
+  var ruleEngine = new RuleEngine(code);
+
+  var results = new List();
+  ruleEngine.registerListener((t, a) {
+    results.add(a[0]);
+  });
+
+  ruleEngine.insertFact(new SimpleFact("Bob", 11, new DateTime.now()));
+  expect(num.tryParse(results[0]), equals(11));
+
+  ruleEngine.insertFact(new SimpleFact("Bob", 12, new DateTime.now()));
+  expect(num.tryParse(results[1]), equals(12));
+}
+
 void main() {
   test('Basic test: insertion of facts', _basicTest);
+  test('Testing of min-aggregate', _minTest);
+  test('Testing of max-aggregate', _maxTest);
 }
 
 class SimpleFact extends Fact {
