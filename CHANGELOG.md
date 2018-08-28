@@ -1,3 +1,3 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.1] - 20/08/2018
 
-* TODO: Describe initial release.
+- Initial version, with support for aggregates and rolling windows.
