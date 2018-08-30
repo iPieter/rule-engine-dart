@@ -1,4 +1,4 @@
-import 'package:rule_engine/fact.dart';
+import 'package:rule_engine/src/fact.dart';
 
 import "clause.dart";
 import 'consequence.dart';
@@ -29,7 +29,9 @@ class Rule {
       var clause = iterator.current;
       bool isTrueFact =
           clause.evaluateClause(_symbolTable, _matchedFacts[clause], fact);
-      firstFact = firstFact && isTrueFact;
+      firstFact = firstFact && (isTrueFact || clause.negated);
+      print("$fact : $isTrueFact : $firstFact");
+      //isTrueFact = clause.negated ? !isTrueFact : isTrueFact;
 
       if (isTrueFact) {
         clauseMap[clause] = fact;
@@ -50,8 +52,11 @@ class Rule {
 
       //finally check of each clause has a fact
       for (Clause clause in _clauses) {
-        allClausesHaveAFact =
-            allClausesHaveAFact && clauseMap.containsKey(clause);
+        allClausesHaveAFact = allClausesHaveAFact &&
+            ((clauseMap.containsKey(clause) && !clause.negated) ||
+                (!clauseMap.containsKey(clause) && clause.negated));
+        print(
+            "$clause : ${((clauseMap.containsKey(clause) && !clause.negated) || (!clauseMap.containsKey(clause) && clause.negated))}");
       }
     }
 

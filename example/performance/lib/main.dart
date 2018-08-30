@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:rule_engine/fact.dart';
+import 'package:rule_engine/src/fact.dart';
 import 'package:rule_engine/rule_engine.dart';
 
 String code1 = r"""rule "get amount for bob"

@@ -1,5 +1,5 @@
-import 'package:rule_engine/lexer.dart';
-import 'package:rule_engine/parser.dart';
+import 'package:rule_engine/src/lexer.dart';
+import 'package:rule_engine/src/parser.dart';
 import 'package:test/test.dart';
 
 void _basicTest() {
@@ -48,6 +48,7 @@ end
     Lexer lexer = new Lexer(code);
     Parser parser = new Parser(lexer.getTokenList());
     var result = parser.buildTree();
+    expect(result, isNot(null));
   } catch (e) {
     thrownError = true;
   }

@@ -1,7 +1,6 @@
 import "token.dart";
 import 'rule.dart';
 import 'clause.dart';
-import 'dart:io';
 import 'assignment.dart';
 import 'condition.dart';
 import 'consequence.dart';
@@ -80,8 +79,6 @@ class Parser {
     assertToken(consumeToken(), TokenType.COLON);
     //rhs is either an attribute or an aggregate
     Token rhsToken = consumeToken();
-    Token lookahead = peekToken();
-
     // finally, match the rhs
     Node rhs = buildConditionSide(rhsToken);
 

@@ -1,5 +1,5 @@
-import 'package:rule_engine/fact.dart';
-import 'package:rule_engine/window.dart';
+import 'package:rule_engine/src/fact.dart';
+import 'package:rule_engine/src/window.dart';
 
 import 'nodes/node.dart';
 import 'nodes/comparison_node.dart';
@@ -24,51 +24,35 @@ class Condition {
       Map<String, dynamic> clauseTable, Fact fact) {
     switch (_comparisonNode.operation) {
       case "<":
-        num lvalue = num.parse(
-                _lhs.getValue(symbolTable, facts, fact) ??
-                    _lhs.getValue(clauseTable, facts, fact),
-                (s) {}) ??
+        num lvalue = num.tryParse(_lhs.getValue(symbolTable, facts, fact) ??
+                _lhs.getValue(clauseTable, facts, fact)) ??
             0;
-        num rvalue = num.parse(
-                _rhs.getValue(symbolTable, facts, fact) ??
-                    _rhs.getValue(clauseTable, facts, fact),
-                (s) {}) ??
+        num rvalue = num.tryParse(_rhs.getValue(symbolTable, facts, fact) ??
+                _rhs.getValue(clauseTable, facts, fact)) ??
             0;
         return lvalue < rvalue;
       case ">":
-        num lvalue = num.parse(
-                _lhs.getValue(symbolTable, facts, fact) ??
-                    _lhs.getValue(clauseTable, facts, fact),
-                (s) {}) ??
+        num lvalue = num.tryParse(_lhs.getValue(symbolTable, facts, fact) ??
+                _lhs.getValue(clauseTable, facts, fact)) ??
             0;
-        num rvalue = num.parse(
-                _rhs.getValue(symbolTable, facts, fact) ??
-                    _rhs.getValue(clauseTable, facts, fact),
-                (s) {}) ??
+        num rvalue = num.tryParse(_rhs.getValue(symbolTable, facts, fact) ??
+                _rhs.getValue(clauseTable, facts, fact)) ??
             0;
         return lvalue > rvalue;
       case "<=":
-        num lvalue = num.parse(
-                _lhs.getValue(symbolTable, facts, fact) ??
-                    _lhs.getValue(clauseTable, facts, fact),
-                (s) {}) ??
+        num lvalue = num.tryParse(_lhs.getValue(symbolTable, facts, fact) ??
+                _lhs.getValue(clauseTable, facts, fact)) ??
             0;
-        num rvalue = num.parse(
-                _rhs.getValue(symbolTable, facts, fact) ??
-                    _rhs.getValue(clauseTable, facts, fact),
-                (s) {}) ??
+        num rvalue = num.tryParse(_rhs.getValue(symbolTable, facts, fact) ??
+                _rhs.getValue(clauseTable, facts, fact)) ??
             0;
         return lvalue <= rvalue;
       case ">=":
-        num lvalue = num.parse(
-                _lhs.getValue(symbolTable, facts, fact) ??
-                    _lhs.getValue(clauseTable, facts, fact),
-                (s) {}) ??
+        num lvalue = num.tryParse(_lhs.getValue(symbolTable, facts, fact) ??
+                _lhs.getValue(clauseTable, facts, fact)) ??
             0;
-        num rvalue = num.parse(
-                _rhs.getValue(symbolTable, facts, fact) ??
-                    _rhs.getValue(clauseTable, facts, fact),
-                (s) {}) ??
+        num rvalue = num.tryParse(_rhs.getValue(symbolTable, facts, fact) ??
+                _rhs.getValue(clauseTable, facts, fact)) ??
             0;
         return lvalue >= rvalue;
       case "==":

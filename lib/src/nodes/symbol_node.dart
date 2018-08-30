@@ -1,4 +1,4 @@
-import 'package:rule_engine/fact.dart';
+import 'package:rule_engine/src/fact.dart';
 
 import 'node.dart';
 
