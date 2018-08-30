@@ -1,5 +1,5 @@
-import 'package:rule_engine/fact.dart';
-import 'package:rule_engine/nodes/node.dart';
+import 'package:rule_engine/src/fact.dart';
+import 'package:rule_engine/src/nodes/node.dart';
 
 class Consequence {
   String _type;

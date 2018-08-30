@@ -1,9 +1,26 @@
 library rule_engine;
 
-import 'package:rule_engine/fact.dart';
-import 'package:rule_engine/lexer.dart';
-import 'package:rule_engine/parser.dart';
-import 'package:rule_engine/rule.dart';
+import 'package:rule_engine/src/fact.dart';
+import 'package:rule_engine/src/lexer.dart';
+import 'package:rule_engine/src/parser.dart';
+import 'package:rule_engine/src/rule.dart';
+
+export 'package:rule_engine/src/lexer.dart';
+export 'package:rule_engine/src/fact.dart';
+export 'package:rule_engine/src/parser.dart';
+export 'package:rule_engine/src/rule.dart';
+export 'package:rule_engine/src/token.dart';
+export 'package:rule_engine/src/assignment.dart';
+export 'package:rule_engine/src/clause.dart';
+export 'package:rule_engine/src/condition.dart';
+export 'package:rule_engine/src/consequence.dart';
+export 'package:rule_engine/src/fact_store.dart';
+export 'package:rule_engine/src/nodes/aggregate_node.dart';
+export 'package:rule_engine/src/nodes/attribute_node.dart';
+export 'package:rule_engine/src/nodes/comparison_node.dart';
+export 'package:rule_engine/src/nodes/literal_node.dart';
+export 'package:rule_engine/src/nodes/node.dart';
+export 'package:rule_engine/src/nodes/symbol_node.dart';
 
 class RuleEngine {
   List<Rule> _rules;

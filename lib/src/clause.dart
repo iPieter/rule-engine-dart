@@ -1,4 +1,4 @@
-import 'package:rule_engine/fact.dart';
+import 'package:rule_engine/src/fact.dart';
 
 import 'assignment.dart';
 import 'condition.dart';
@@ -7,9 +7,9 @@ class Clause {
   String _type;
   List<Assignment> _assignments;
   List<Condition> _conditions;
-  bool _negated;
+  bool negated;
 
-  Clause(this._type, this._negated) {
+  Clause(this._type, this.negated) {
     _assignments = new List();
     _conditions = new List();
   }
@@ -50,10 +50,10 @@ class Clause {
     }
 
     //when the clause is negated, no symbols will be stored and the entire clause will yield the oposite value
-    validClause = _negated ? !validClause : validClause;
+    //validClause = negated ? !validClause : validClause;
 
     //now the clause should be true, in which case it will assign values, or false
-    if (validClause) {
+    if (validClause && !negated) {
       symbolTable.addAll(clauseTable);
     }
 
