@@ -1,4 +1,8 @@
-## [0.0.2] - 31/08/2018
+## [0.0.3] - 31/08/2018
+
+- Removed unnecessary output
+
+## [0.0.2] - 30/08/2018
 
 - Fixed incorrect behavior of `not`-operator with multiple types of facts.
 - Improved code style.

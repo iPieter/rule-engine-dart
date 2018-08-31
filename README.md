@@ -11,7 +11,8 @@
 - Allows multiple callbacks for end results
 - Supports variables inside rules
 - Supports rolling windows on all `DateTime` objects
-- supports aggregates on all numerical attributes (sum, average, min, max)
+- Supports aggregates on all numerical attributes (sum, average, min, max)
+- Allows for negation of facts by offering a `not` keyword
 
 ## Getting Started
 
@@ -19,11 +20,8 @@ Get started by adding the package to your project as a dependency:
 
 ```
 dependencies:
- rule_engine:
-   git: git://github.com/iPieter/rule_engine_dart
+ rule_engine: ^0.0.3
 ```
-
-At the moment, only the git version is available, since it is not yet published.
 
 ## Rule syntax
 
@@ -138,9 +136,13 @@ end
 
 RuleEngine ruleEngine = new RuleEngine(code);
 
+//You can register multiple listeners, which are all called in the order they are registered
 ruleEngine.registerListener((type, arguments) {
   print("insert $type with arguments $arguments");
 });
+
+//insert a fact that implements from [Fact]
+ruleEngine.insertFact( new SimpleFact("Bob", 1000, "Cheese", new DateTime.now()) );
 ```
 
 ## FAQ
