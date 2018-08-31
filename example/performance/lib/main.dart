@@ -94,7 +94,7 @@ end
 """;
 
 main() {
-  for (var code in [code1]) {
+  for (var code in [code2]) {
     print(code.substring(0, 20));
 
     for (var j = 0; j < 8; j++) {

@@ -23,14 +23,14 @@ class Rule {
     bool firstFact = true;
     Map<Clause, Fact> clauseMap = new Map();
     Map<String, dynamic> _symbolTable = new Map();
+    _symbolTable["\$ruleName"] = _name;
 
     var iterator = _clauses.iterator;
-    while (firstFact && iterator.moveNext()) {
+    while (iterator.moveNext()) {
       var clause = iterator.current;
       bool isTrueFact =
           clause.evaluateClause(_symbolTable, _matchedFacts[clause], fact);
       firstFact = firstFact && (isTrueFact || clause.negated);
-      print("$fact : $isTrueFact : $firstFact");
       //isTrueFact = clause.negated ? !isTrueFact : isTrueFact;
 
       if (isTrueFact) {
@@ -55,8 +55,6 @@ class Rule {
         allClausesHaveAFact = allClausesHaveAFact &&
             ((clauseMap.containsKey(clause) && !clause.negated) ||
                 (!clauseMap.containsKey(clause) && clause.negated));
-        print(
-            "$clause : ${((clauseMap.containsKey(clause) && !clause.negated) || (!clauseMap.containsKey(clause) && clause.negated))}");
       }
     }
 

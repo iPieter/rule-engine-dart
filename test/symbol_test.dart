@@ -4,48 +4,24 @@ import 'package:test/test.dart';
 
 void _basicTest() {
   String code = r"""
-rule "expense"
+rule "Bob saved some money"
   when
-    not Achievement( title ==  "Bob saved some money" )
+    not Achievement( title ==  $ruleName )
     Expense( amount > 10, $amount: amount )
   then
-    publish Achievement( "01", "Bob saved some money", $amount )
+    publish Achievement( "01", $ruleName, $amount )
 end
 """;
   var ruleEngine = new RuleEngine(code);
 
   var results = new List();
   ruleEngine.registerListener((t, a) {
-    results.add(a[0]);
+    if (t == "Achievement") results.add(new Achievement(a[0], a[1], a[2]));
   });
 
   ruleEngine.insertFact(new Expense("Bob", 1000, "Cheese", new DateTime.now()));
   expect(results.length, equals(1));
-  ruleEngine.insertFact(new Achievement("01", "Bob saved some money", 100));
-
-  ruleEngine.insertFact(new Expense("Bob", 2000, "Cheese", new DateTime.now()));
-  expect(results.length, equals(1));
-}
-
-void _reverseBasicTest() {
-  String code = r"""
-rule "expense"
-  when
-    Expense( amount > 10, $amount: amount )
-    not Achievement( title ==  "Bob saved some money" )
-  then
-    publish Achievement( "01", "Bob saved some money", $amount )
-end
-""";
-  var ruleEngine = new RuleEngine(code);
-
-  var results = new List();
-  ruleEngine.registerListener((t, a) {
-    results.add(a[0]);
-  });
-
-  ruleEngine.insertFact(new Expense("Bob", 1000, "Cheese", new DateTime.now()));
-  expect(results.length, equals(1));
+  expect(results[0].attributeMap()["title"], "Bob saved some money");
   ruleEngine.insertFact(new Achievement("01", "Bob saved some money", 100));
 
   ruleEngine.insertFact(new Expense("Bob", 2000, "Cheese", new DateTime.now()));
@@ -53,8 +29,7 @@ end
 }
 
 void main() {
-  test('Test not statement', _basicTest);
-  test('Test not statement in reverse', _reverseBasicTest);
+  test('Test symbol of rule name', _basicTest);
 }
 
 class Expense extends Fact {
