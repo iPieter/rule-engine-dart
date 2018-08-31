@@ -61,6 +61,8 @@ So each clause matches one type of fact, followed by zero or more conditions or 
 
   In the above clause, the attribute `amount` is assigned to a symbol with name `$amount`.
 
+  For convenience, the rule name is by default available as `$ruleName`, this can be overwritten. Support for additional variables is planned, but not yet implemented.
+
 - **Conditions**: both sides have to be comparable, and the condition should be true for the clause to finish.
   The environment supports equality for strings, numbers and objects and comparisons for numbers.
 

@@ -1,5 +1,6 @@
 ## [0.0.3] - 31/08/2018
 
+- Added one environmental symbol (`$ruleName`)
 - Removed unnecessary output
 
 ## [0.0.2] - 30/08/2018

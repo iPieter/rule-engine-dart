@@ -23,6 +23,7 @@ class Rule {
     bool firstFact = true;
     Map<Clause, Fact> clauseMap = new Map();
     Map<String, dynamic> _symbolTable = new Map();
+    _symbolTable["\$ruleName"] = _name;
 
     var iterator = _clauses.iterator;
     while (iterator.moveNext()) {
