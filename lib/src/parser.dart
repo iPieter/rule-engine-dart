@@ -57,6 +57,7 @@ class Parser {
 
   exitWithError(String error, Token position) {
     int begin = 0;
+    int j = 1;
     while (position.pos - begin > 0 &&
         _code.codeUnitAt(position.pos - begin) != '\n'.codeUnitAt(0)) begin++;
 
@@ -64,15 +65,13 @@ class Parser {
     while (position.pos + end < _code.length &&
         _code.codeUnitAt(position.pos + end) != '\n'.codeUnitAt(0)) end++;
 
-    print(
-        _code.substring(position.pos - begin, position.pos + end).padLeft(15));
+    print(_code.substring(position.pos - begin, position.pos + end));
 
     StringBuffer sb = new StringBuffer();
 
     for (int i = 1; i < begin; i++) sb.write(" ");
 
     print("$sb∧");
-    //print("$sb|");
     print("$sb#=== $error");
 
     throw new Error();
