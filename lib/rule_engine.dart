@@ -37,7 +37,7 @@ class RuleEngine {
     var tokens = lexer.getTokenList();
     //tokens.forEach((e) => print(e) );
 
-    Parser parser = new Parser(tokens);
+    Parser parser = new Parser(tokens, code);
 
     this._rules = parser.buildTree();
   }

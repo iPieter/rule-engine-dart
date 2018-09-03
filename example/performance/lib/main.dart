@@ -93,8 +93,25 @@ rule "10"
 end
 """;
 
+String code3 = r"""
+rule "First Expense"
+  when
+    not Achievement( title == $ruleName )
+    Expense()
+  then
+    publish Achievement( "01", $ruleName, "The beginning of a new era" )
+end
+
+rule "Sober Monkey"
+  when
+    not Achievement( title == $ruleName )
+    not Expense( category == "Alcohol", when in Window( length: Duration( days: 2 ) ) )
+  then
+    publish Achievement( "02", $ruleName, "No booze for a month" )
+end""";
+
 main() {
-  for (var code in [code2]) {
+  for (var code in [code3]) {
     print(code.substring(0, 20));
 
     for (var j = 0; j < 8; j++) {

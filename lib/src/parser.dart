@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import "token.dart";
 import 'rule.dart';
 import 'clause.dart';
@@ -16,8 +18,9 @@ class Parser {
   List<Token> _tokenList;
   int _index;
   bool _valid;
+  String _code;
 
-  Parser(this._tokenList) {
+  Parser(this._tokenList, this._code) {
     _index = 0;
     _valid = true;
   }
@@ -39,19 +42,39 @@ class Parser {
   assertToken(Token token, TokenType type, {String value: ""}) {
     if (token.type != type) {
       exitWithError(
-          "Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'");
+          "Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'",
+          token);
     }
     if (value != "") {
       if (token.name != value) {
         exitWithError(
-            "Error while parsing, expected token of value '${value}', got '${token.name}' for token: '${token}'");
+            "Error while parsing, expected token of value '${value}', got '${token.name}' for token: '${token}'",
+            token);
       }
     }
     return true;
   }
 
-  exitWithError(String error) {
-    print(error);
+  exitWithError(String error, Token position) {
+    int begin = 0;
+    while (position.pos - begin > 0 &&
+        _code.codeUnitAt(position.pos - begin) != '\n'.codeUnitAt(0)) begin++;
+
+    int end = 0;
+    while (position.pos + end < _code.length &&
+        _code.codeUnitAt(position.pos + end) != '\n'.codeUnitAt(0)) end++;
+
+    print(
+        _code.substring(position.pos - begin, position.pos + end).padLeft(15));
+
+    StringBuffer sb = new StringBuffer();
+
+    for (int i = 1; i < begin; i++) sb.write(" ");
+
+    print("$sb∧");
+    //print("$sb|");
+    print("$sb#=== $error");
+
     throw new Error();
   }
 
@@ -62,12 +85,14 @@ class Parser {
 
     if (!match) {
       exitWithError(
-          "Error while parsing, expected ${types.toString()}, got '${token.type}' for token: '${token}'");
+          "Error while parsing, expected ${types.toString()}, got '${token.type}' for token: '${token}'",
+          token);
     }
     if (value != "") {
       if (token.name != value) {
         exitWithError(
-            "Error while parsing, expected '${value}', got '${token.name}' for token: '${token}'");
+            "Error while parsing, expected '${value}', got '${token.name}' for token: '${token}'",
+            token);
       }
     }
     return true;
@@ -146,13 +171,14 @@ class Parser {
 
           if (t.name == "start") {
             if (window.start != "")
-              exitWithError("Window contains more than 2 start declarations");
+              exitWithError(
+                  "Window contains more than 2 start declarations", t);
 
             window.start = dateStringToken.name;
           }
           if (t.name == "end") {
             if (window.end != "")
-              exitWithError("Window contains more than 2 end declarations");
+              exitWithError("Window contains more than 2 end declarations", t);
 
             window.end = dateStringToken.name;
           }
