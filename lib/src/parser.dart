@@ -100,14 +100,12 @@ class Parser {
 
       result = new AggregateNode(clauseSubject.name, attributeToken.name);
     } else {
-      RegExp numberRegExp = new RegExp(r"[0-9]+");
       // 3 cases left: literal, attribute or a symbol
       // symbol
       if (clauseSubject.name[0] == r"$")
         result = new SymbolNode(clauseSubject.name);
       // literal
-      else if (clauseSubject.type == TokenType.STRING ||
-          numberRegExp.stringMatch(clauseSubject.name) == clauseSubject.name)
+      else if ( [TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT].contains(clauseSubject.type) )
         result = new LiteralNode(clauseSubject.name);
       else
         result = new AttributeNode(clauseSubject.name);
@@ -172,7 +170,7 @@ class Parser {
               assertToken(n, TokenType.IDENTIFIER);
               assertToken(consumeToken(), TokenType.COLON);
               Token v = consumeToken();
-              assertToken(v, TokenType.IDENTIFIER);
+              assertTokenList(v, [TokenType.INTEGER, TokenType.FLOATING_POINT]);
 
               window.durationArguments[n.name] = v.name;
               ll = peekToken();
@@ -289,13 +287,11 @@ class Parser {
     while (lookahead.type != TokenType.RIGHT_PAREN) {
       Token clauseSubject = consumeToken();
       Node node;
-      RegExp numberRegExp = new RegExp(r"[0-9]+");
 
       if (clauseSubject.name[0] == r"$")
         node = new SymbolNode(clauseSubject.name);
       // literal
-      else if (clauseSubject.type == TokenType.STRING ||
-          numberRegExp.stringMatch(clauseSubject.name) == clauseSubject.name)
+      else if ([TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT].contains(clauseSubject.type))
         node = new LiteralNode(clauseSubject.name);
       result.addArgument(node);
 
