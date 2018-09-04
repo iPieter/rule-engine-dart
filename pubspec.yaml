@@ -1,6 +1,6 @@
 name: rule_engine
 description: A zero-dependency rule engine for Dart and Flutter with Drools-like syntax.
-version: 0.0.3
+version: 0.0.4
 author: Pieter Delobelle<pieter.delobelle@gmail.com>
 homepage: https://github.com/iPieter/rule_engine_dart
 
