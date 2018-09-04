@@ -116,6 +116,22 @@ end
   expect(result.length, equals(1));
 }
 
+void _emptyClause() {
+  String code = r"""
+rule "weekly saver"
+  when
+      Expense()
+  then
+      publish Achievement( "test" )
+end
+""";
+  Lexer lexer = new Lexer(code);
+  Parser parser = new Parser(lexer.getTokenList());
+  var result = parser.buildTree();
+  print(result[0]);
+  expect(result.length, equals(1));
+}
+
 void main() {
   test('Basic test: one rule with one clause', _basicTest);
   test('Negation test with one rule with one clause', _notTest);
@@ -123,4 +139,5 @@ void main() {
   test('Different window declarations', _windowRules);
   test('Negative literals', _negativeLiterals);
   test('Floating literals', _floatingLiterals);
+  test('Empty clause (only type)', _emptyClause);
 }

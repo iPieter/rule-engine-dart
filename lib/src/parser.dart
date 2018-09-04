@@ -105,7 +105,8 @@ class Parser {
       if (clauseSubject.name[0] == r"$")
         result = new SymbolNode(clauseSubject.name);
       // literal
-      else if ( [TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT].contains(clauseSubject.type) )
+      else if ([TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT]
+          .contains(clauseSubject.type))
         result = new LiteralNode(clauseSubject.name);
       else
         result = new AttributeNode(clauseSubject.name);
@@ -234,41 +235,27 @@ class Parser {
 
     Clause result = new Clause(typeToken.name, negated);
 
-    Token clauseSubject = consumeToken();
-
     lookahead = peekToken();
-    if (lookahead.type == TokenType.COLON) {
-      var assignment = buildAssignment(clauseSubject);
-      //print(assignment.toString());
-      result.addAssignment(assignment);
-    } else {
-      var condition = buildCondition(clauseSubject);
-      //print(condition.toString());
-      result.addCondition(condition);
-    }
 
-    lookahead = peekToken();
-    while (lookahead.type == TokenType.COMMA) {
-      assertToken(consumeToken(), TokenType.COMMA);
+    if (lookahead.type != TokenType.RIGHT_PAREN)
+      do {
+        Token clauseSubject = consumeToken();
 
-      Token clauseSubject = consumeToken();
-
-      Token ll = peekToken();
-      if (ll.type == TokenType.COLON) {
-        var assignment = buildAssignment(clauseSubject);
-        //print(assignment.toString());
-        result.addAssignment(assignment);
-      } else {
-        var condition = buildCondition(clauseSubject);
-        //print(condition.toString());
-        result.addCondition(condition);
-      }
-      lookahead = peekToken();
-    }
+        Token ll = peekToken();
+        if (ll.type == TokenType.COLON) {
+          var assignment = buildAssignment(clauseSubject);
+          //print(assignment.toString());
+          result.addAssignment(assignment);
+        } else {
+          var condition = buildCondition(clauseSubject);
+          //print(condition.toString());
+          result.addCondition(condition);
+        }
+        lookahead = peekToken();
+      } while (lookahead.type == TokenType.COMMA &&
+          assertToken(consumeToken(), TokenType.COMMA));
 
     assertToken(consumeToken(), TokenType.RIGHT_PAREN);
-
-    lookahead = peekToken();
 
     return result;
   }
@@ -291,7 +278,8 @@ class Parser {
       if (clauseSubject.name[0] == r"$")
         node = new SymbolNode(clauseSubject.name);
       // literal
-      else if ([TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT].contains(clauseSubject.type))
+      else if ([TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT]
+          .contains(clauseSubject.type))
         node = new LiteralNode(clauseSubject.name);
       result.addArgument(node);
 

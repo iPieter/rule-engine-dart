@@ -67,16 +67,17 @@ class Lexer {
             var tokenName = "" + c;
             var start = _pos - 1;
 
-            if(c == '-' && digitRegex.hasMatch(peekChar())) {
+            if (c == '-' && digitRegex.hasMatch(peekChar())) {
               while (digitRegex.hasMatch(peekChar())) {
                 tokenName += consumeChar();
               }
-              if(peekChar() == '.'){
+              if (peekChar() == '.') {
                 tokenName += consumeChar();
                 while (digitRegex.hasMatch(peekChar())) {
                   tokenName += consumeChar();
                 }
-                result.add(new Token(TokenType.FLOATING_POINT, tokenName, start));
+                result
+                    .add(new Token(TokenType.FLOATING_POINT, tokenName, start));
               } else {
                 result.add(new Token(TokenType.INTEGER, tokenName, start));
               }
@@ -87,17 +88,18 @@ class Lexer {
               result.add(new Token(_tokenTypeMap[c], c, _pos - 1));
               break;
             }
-            
-            if(digitRegex.hasMatch(c)) {
+
+            if (digitRegex.hasMatch(c)) {
               while (digitRegex.hasMatch(peekChar())) {
                 tokenName += consumeChar();
               }
-              if(peekChar() == '.'){
+              if (peekChar() == '.') {
                 tokenName += consumeChar();
                 while (digitRegex.hasMatch(peekChar())) {
                   tokenName += consumeChar();
                 }
-                result.add(new Token(TokenType.FLOATING_POINT, tokenName, start));
+                result
+                    .add(new Token(TokenType.FLOATING_POINT, tokenName, start));
               } else {
                 result.add(new Token(TokenType.INTEGER, tokenName, start));
               }
