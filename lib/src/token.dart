@@ -14,7 +14,9 @@ enum TokenType {
   GREATER_THAN,
   COLON,
   DOT,
-  COMMA
+  COMMA,
+  INTEGER,
+  FLOATING_POINT
 }
 
 class Token {
