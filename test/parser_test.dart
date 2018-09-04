@@ -12,7 +12,7 @@ rule "weekly saver"
 end
 """;
   Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList());
+  Parser parser = new Parser(lexer.getTokenList(), code);
   var result = parser.buildTree();
   expect(result.length, equals(1));
 }
@@ -27,7 +27,7 @@ rule "weekly saver"
 end
 """;
   Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList());
+  Parser parser = new Parser(lexer.getTokenList(), code);
   var result = parser.buildTree();
   expect(result.length, equals(1));
 }
@@ -46,7 +46,7 @@ end
 
   try {
     Lexer lexer = new Lexer(code);
-    Parser parser = new Parser(lexer.getTokenList());
+    Parser parser = new Parser(lexer.getTokenList(), code);
     var result = parser.buildTree();
     expect(result, isNot(null));
   } catch (e) {
@@ -72,7 +72,7 @@ end
 
   try {
     Lexer lexer = new Lexer(code);
-    Parser parser = new Parser(lexer.getTokenList());
+    Parser parser = new Parser(lexer.getTokenList(), code);
     var result = parser.buildTree();
     expect(result.length, equals(1));
   } catch (e) {
@@ -92,9 +92,8 @@ rule "weekly saver"
 end
 """;
   Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList());
+  Parser parser = new Parser(lexer.getTokenList(), code);
   var result = parser.buildTree();
-  print(result[0]);
   expect(result.length, equals(1));
 }
 
