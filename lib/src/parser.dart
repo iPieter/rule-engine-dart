@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import "token.dart";
 import 'rule.dart';
 import 'clause.dart';
@@ -16,8 +18,9 @@ class Parser {
   List<Token> _tokenList;
   int _index;
   bool _valid;
+  String _code;
 
-  Parser(this._tokenList) {
+  Parser(this._tokenList, this._code) {
     _index = 0;
     _valid = true;
   }
@@ -39,19 +42,38 @@ class Parser {
   assertToken(Token token, TokenType type, {String value: ""}) {
     if (token.type != type) {
       exitWithError(
-          "Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'");
+          "Error while parsing, expected '${type}', got '${token.type}' for token: '${token}'",
+          token);
     }
     if (value != "") {
       if (token.name != value) {
         exitWithError(
-            "Error while parsing, expected token of value '${value}', got '${token.name}' for token: '${token}'");
+            "Error while parsing, expected token of value '${value}', got '${token.name}' for token: '${token}'",
+            token);
       }
     }
     return true;
   }
 
-  exitWithError(String error) {
-    print(error);
+  exitWithError(String error, Token position) {
+    int begin = 0;
+    int j = 1;
+    while (position.pos - begin > 0 &&
+        _code.codeUnitAt(position.pos - begin) != '\n'.codeUnitAt(0)) begin++;
+
+    int end = 0;
+    while (position.pos + end < _code.length &&
+        _code.codeUnitAt(position.pos + end) != '\n'.codeUnitAt(0)) end++;
+
+    print(_code.substring(position.pos - begin, position.pos + end));
+
+    StringBuffer sb = new StringBuffer();
+
+    for (int i = 1; i < begin; i++) sb.write(" ");
+
+    print("$sb∧");
+    print("$sb#=== $error");
+
     throw new Error();
   }
 
@@ -62,12 +84,14 @@ class Parser {
 
     if (!match) {
       exitWithError(
-          "Error while parsing, expected ${types.toString()}, got '${token.type}' for token: '${token}'");
+          "Error while parsing, expected ${types.toString()}, got '${token.type}' for token: '${token}'",
+          token);
     }
     if (value != "") {
       if (token.name != value) {
         exitWithError(
-            "Error while parsing, expected '${value}', got '${token.name}' for token: '${token}'");
+            "Error while parsing, expected '${value}', got '${token.name}' for token: '${token}'",
+            token);
       }
     }
     return true;
@@ -100,14 +124,13 @@ class Parser {
 
       result = new AggregateNode(clauseSubject.name, attributeToken.name);
     } else {
-      RegExp numberRegExp = new RegExp(r"[0-9]+");
       // 3 cases left: literal, attribute or a symbol
       // symbol
       if (clauseSubject.name[0] == r"$")
         result = new SymbolNode(clauseSubject.name);
       // literal
-      else if (clauseSubject.type == TokenType.STRING ||
-          numberRegExp.stringMatch(clauseSubject.name) == clauseSubject.name)
+      else if ([TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT]
+          .contains(clauseSubject.type))
         result = new LiteralNode(clauseSubject.name);
       else
         result = new AttributeNode(clauseSubject.name);
@@ -146,13 +169,14 @@ class Parser {
 
           if (t.name == "start") {
             if (window.start != "")
-              exitWithError("Window contains more than 2 start declarations");
+              exitWithError(
+                  "Window contains more than 2 start declarations", t);
 
             window.start = dateStringToken.name;
           }
           if (t.name == "end") {
             if (window.end != "")
-              exitWithError("Window contains more than 2 end declarations");
+              exitWithError("Window contains more than 2 end declarations", t);
 
             window.end = dateStringToken.name;
           }
@@ -172,7 +196,7 @@ class Parser {
               assertToken(n, TokenType.IDENTIFIER);
               assertToken(consumeToken(), TokenType.COLON);
               Token v = consumeToken();
-              assertToken(v, TokenType.IDENTIFIER);
+              assertTokenList(v, [TokenType.INTEGER, TokenType.FLOATING_POINT]);
 
               window.durationArguments[n.name] = v.name;
               ll = peekToken();
@@ -236,41 +260,27 @@ class Parser {
 
     Clause result = new Clause(typeToken.name, negated);
 
-    Token clauseSubject = consumeToken();
-
     lookahead = peekToken();
-    if (lookahead.type == TokenType.COLON) {
-      var assignment = buildAssignment(clauseSubject);
-      //print(assignment.toString());
-      result.addAssignment(assignment);
-    } else {
-      var condition = buildCondition(clauseSubject);
-      //print(condition.toString());
-      result.addCondition(condition);
-    }
 
-    lookahead = peekToken();
-    while (lookahead.type == TokenType.COMMA) {
-      assertToken(consumeToken(), TokenType.COMMA);
+    if (lookahead.type != TokenType.RIGHT_PAREN)
+      do {
+        Token clauseSubject = consumeToken();
 
-      Token clauseSubject = consumeToken();
-
-      Token ll = peekToken();
-      if (ll.type == TokenType.COLON) {
-        var assignment = buildAssignment(clauseSubject);
-        //print(assignment.toString());
-        result.addAssignment(assignment);
-      } else {
-        var condition = buildCondition(clauseSubject);
-        //print(condition.toString());
-        result.addCondition(condition);
-      }
-      lookahead = peekToken();
-    }
+        Token ll = peekToken();
+        if (ll.type == TokenType.COLON) {
+          var assignment = buildAssignment(clauseSubject);
+          //print(assignment.toString());
+          result.addAssignment(assignment);
+        } else {
+          var condition = buildCondition(clauseSubject);
+          //print(condition.toString());
+          result.addCondition(condition);
+        }
+        lookahead = peekToken();
+      } while (lookahead.type == TokenType.COMMA &&
+          assertToken(consumeToken(), TokenType.COMMA));
 
     assertToken(consumeToken(), TokenType.RIGHT_PAREN);
-
-    lookahead = peekToken();
 
     return result;
   }
@@ -289,13 +299,12 @@ class Parser {
     while (lookahead.type != TokenType.RIGHT_PAREN) {
       Token clauseSubject = consumeToken();
       Node node;
-      RegExp numberRegExp = new RegExp(r"[0-9]+");
 
       if (clauseSubject.name[0] == r"$")
         node = new SymbolNode(clauseSubject.name);
       // literal
-      else if (clauseSubject.type == TokenType.STRING ||
-          numberRegExp.stringMatch(clauseSubject.name) == clauseSubject.name)
+      else if ([TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT]
+          .contains(clauseSubject.type))
         node = new LiteralNode(clauseSubject.name);
       result.addArgument(node);
 

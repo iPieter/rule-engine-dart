@@ -12,7 +12,7 @@ rule "weekly saver"
 end
 """;
   Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList());
+  Parser parser = new Parser(lexer.getTokenList(), code);
   var result = parser.buildTree();
   expect(result.length, equals(1));
 }
@@ -27,7 +27,7 @@ rule "weekly saver"
 end
 """;
   Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList());
+  Parser parser = new Parser(lexer.getTokenList(), code);
   var result = parser.buildTree();
   expect(result.length, equals(1));
 }
@@ -46,7 +46,7 @@ end
 
   try {
     Lexer lexer = new Lexer(code);
-    Parser parser = new Parser(lexer.getTokenList());
+    Parser parser = new Parser(lexer.getTokenList(), code);
     var result = parser.buildTree();
     expect(result, isNot(null));
   } catch (e) {
@@ -72,7 +72,7 @@ end
 
   try {
     Lexer lexer = new Lexer(code);
-    Parser parser = new Parser(lexer.getTokenList());
+    Parser parser = new Parser(lexer.getTokenList(), code);
     var result = parser.buildTree();
     expect(result.length, equals(1));
   } catch (e) {
@@ -92,7 +92,40 @@ rule "weekly saver"
 end
 """;
   Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList());
+  Parser parser = new Parser(lexer.getTokenList(), code);
+  var result = parser.buildTree();
+  expect(result.length, equals(1));
+}
+
+void _floatingLiterals() {
+  String code = r"""
+rule "weekly saver"
+  when
+      Expense( amount > 1.1 )
+      Expense( amount > 1.000001 )
+      Expense( amount > 1.0 )
+  then
+      publish Achievement( "test" )
+end
+""";
+  Lexer lexer = new Lexer(code);
+  Parser parser = new Parser(lexer.getTokenList(), code);
+  var result = parser.buildTree();
+  print(result[0]);
+  expect(result.length, equals(1));
+}
+
+void _emptyClause() {
+  String code = r"""
+rule "weekly saver"
+  when
+      Expense()
+  then
+      publish Achievement( "test" )
+end
+""";
+  Lexer lexer = new Lexer(code);
+  Parser parser = new Parser(lexer.getTokenList(), code);
   var result = parser.buildTree();
   print(result[0]);
   expect(result.length, equals(1));
@@ -104,4 +137,6 @@ void main() {
   test('Invalid symbol for assignment', _invalidAssignmentTest);
   test('Different window declarations', _windowRules);
   test('Negative literals', _negativeLiterals);
+  test('Floating literals', _floatingLiterals);
+  test('Empty clause (only type)', _emptyClause);
 }

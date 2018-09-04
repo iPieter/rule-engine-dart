@@ -1,3 +1,8 @@
+## [0.0.4] - 04/09/2018
+
+- Support for empty clauses `SimpleFact()`
+- Support for floating point numbers
+
 ## [0.0.3] - 31/08/2018
 
 - Added one environmental symbol (`$ruleName`)
