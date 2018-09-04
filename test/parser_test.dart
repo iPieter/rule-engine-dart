@@ -98,10 +98,29 @@ end
   expect(result.length, equals(1));
 }
 
+void _floatingLiterals() {
+  String code = r"""
+rule "weekly saver"
+  when
+      Expense( amount > 1.1 )
+      Expense( amount > 1.000001 )
+      Expense( amount > 1.0 )
+  then
+      publish Achievement( "test" )
+end
+""";
+  Lexer lexer = new Lexer(code);
+  Parser parser = new Parser(lexer.getTokenList());
+  var result = parser.buildTree();
+  print(result[0]);
+  expect(result.length, equals(1));
+}
+
 void main() {
   test('Basic test: one rule with one clause', _basicTest);
   test('Negation test with one rule with one clause', _notTest);
   test('Invalid symbol for assignment', _invalidAssignmentTest);
   test('Different window declarations', _windowRules);
   test('Negative literals', _negativeLiterals);
+  test('Floating literals', _floatingLiterals);
 }
