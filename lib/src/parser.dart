@@ -13,6 +13,7 @@ import 'nodes/symbol_node.dart';
 import 'nodes/attribute_node.dart';
 import 'nodes/literal_node.dart';
 import 'nodes/comparison_node.dart';
+import 'nodes/arithmetic_node.dart';
 
 class Parser {
   List<Token> _tokenList;
@@ -32,11 +33,11 @@ class Parser {
       return _tokenList[_index++];
   }
 
-  peekToken() {
-    if (_index + 1 > _tokenList.length)
+  peekToken({int amount : 0}) {
+    if (_index + amount >= _tokenList.length)
       return null;
     else
-      return _tokenList[_index];
+      return _tokenList[_index + amount];
   }
 
   assertToken(Token token, TokenType type, {String value: ""}) {
@@ -97,14 +98,16 @@ class Parser {
     return true;
   }
 
-  Assignment buildAssignment(Token clauseSubject) {
+  Assignment buildAssignment() {
     Assignment assignment;
+
+    Token clauseSubject = consumeToken();
+    assertToken(clauseSubject, TokenType.IDENTIFIER);
 
     assertToken(consumeToken(), TokenType.COLON);
     //rhs is either an attribute or an aggregate
-    Token rhsToken = consumeToken();
     // finally, match the rhs
-    Node rhs = buildConditionSide(rhsToken);
+    Node rhs = buildExpression();
 
     SymbolNode symbolNode = new SymbolNode(clauseSubject.name);
     assignment = new Assignment(symbolNode, rhs);
@@ -112,7 +115,60 @@ class Parser {
     return assignment;
   }
 
-  Node buildConditionSide(Token clauseSubject) {
+  Node buildExpression() {
+    ArithmeticNode result;
+
+    Node term = buildTerm();
+    result = new ArithmeticNode(term);
+
+    Token lookahead = peekToken();
+    if( [TokenType.PLUS, TokenType.MINUS].contains(lookahead.type) ) {
+      Token operation = consumeToken();
+      assertTokenList(operation, [TokenType.PLUS, TokenType.MINUS]);
+      Node term = buildTerm();
+      
+      result.addOperation(operation.name, term);
+    }
+
+    return result;
+  }
+
+  Node buildTerm() {
+    ArithmeticNode result;
+
+    Node factor = buildFactor();
+    result = new ArithmeticNode(factor);
+
+    Token lookahead = peekToken();
+    if( [TokenType.MULTIPLY, TokenType.DIVIDE].contains(lookahead.type) ) {
+      Token operation = consumeToken();
+      assertTokenList(operation, [TokenType.MULTIPLY, TokenType.DIVIDE]);
+      Node factor = buildFactor();
+      result.addOperation(operation.name, factor);
+    }
+
+    return result;
+  }
+
+  Node buildFactor() {
+    Node result;
+
+    Token lookahead = peekToken();
+    if(lookahead.type == TokenType.LEFT_PAREN) {
+      assertToken(consumeToken(), TokenType.LEFT_PAREN);
+      result = buildExpression();
+      assertToken(consumeToken(), TokenType.RIGHT_PAREN);
+    } else {
+      result = buildConditionSide();
+    }
+
+    return result;
+  }
+
+  Node buildConditionSide() {
+
+    Token clauseSubject = consumeToken();
+
     Node result;
     Token lookahead = peekToken();
     // 4 cases, 1st one: aggregate
@@ -138,14 +194,14 @@ class Parser {
     return result;
   }
 
-  Condition buildCondition(Token clauseSubject) {
+  Condition buildCondition() {
     Condition result;
     Node lhs;
     ComparisonNode comparisonNode;
     Node rhs;
 
     // match lhs of the comparison
-    lhs = buildConditionSide(clauseSubject);
+    lhs = buildExpression();
 
     // match the comparison operator itself
     Token firstComparison = consumeToken();
@@ -238,8 +294,7 @@ class Parser {
     }
 
     // finally, match the rhs
-    Token rhsToken = consumeToken();
-    rhs = buildConditionSide(rhsToken);
+    rhs = buildExpression();
 
     result = new Condition(lhs, comparisonNode, rhs);
 
@@ -264,15 +319,15 @@ class Parser {
 
     if (lookahead.type != TokenType.RIGHT_PAREN)
       do {
-        Token clauseSubject = consumeToken();
+        //Token clauseSubject = consumeToken();
 
-        Token ll = peekToken();
+        Token ll = peekToken(amount: 1);
         if (ll.type == TokenType.COLON) {
-          var assignment = buildAssignment(clauseSubject);
+          var assignment = buildAssignment();
           //print(assignment.toString());
           result.addAssignment(assignment);
         } else {
-          var condition = buildCondition(clauseSubject);
+          var condition = buildCondition();
           //print(condition.toString());
           result.addCondition(condition);
         }
