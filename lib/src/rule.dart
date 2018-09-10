@@ -20,26 +20,33 @@ class Rule {
   }
 
   bool evaluateRule(Fact fact, List<Function> callbacks) {
-    bool firstFact = true;
+    // firstFact needs to find at least one fact that evaluates to true
+    bool firstFact = false;
+
+    // whilst in the end, all clauses need to have at least one fact
+    bool allClausesHaveAFact = true;
+
     Map<Clause, Fact> clauseMap = new Map();
     Map<String, dynamic> _symbolTable = new Map();
     _symbolTable["\$ruleName"] = _name;
-
+    print("evaluating for $fact");
     var iterator = _clauses.iterator;
     while (iterator.moveNext()) {
       var clause = iterator.current;
       bool isTrueFact =
           clause.evaluateClause(_symbolTable, _matchedFacts[clause], fact);
-      firstFact = firstFact && (isTrueFact || clause.negated);
+      firstFact = firstFact ||
+          (isTrueFact && !clause.negated) ||
+          (!isTrueFact && clause.negated);
+
       //isTrueFact = clause.negated ? !isTrueFact : isTrueFact;
 
       if (isTrueFact) {
+        print("adding $fact");
         clauseMap[clause] = fact;
         _matchedFacts[clause].add(fact);
       }
     }
-
-    bool allClausesHaveAFact = firstFact;
 
     if (firstFact) {
       //if the inserted fact (firstFact) evaluates to true, all other facts have to find a matching value
@@ -47,6 +54,12 @@ class Rule {
         if (!clauseMap.containsKey(clause) &&
             _matchedFacts[clause].length > 0) {
           clauseMap[clause] = _matchedFacts[clause].first;
+          clause.evaluateClause(
+              _symbolTable,
+              _matchedFacts[clause]
+                  .skipWhile((f) => f == clauseMap[clause])
+                  .toList(),
+              clauseMap[clause]);
         }
       }
 
@@ -55,8 +68,12 @@ class Rule {
         allClausesHaveAFact = allClausesHaveAFact &&
             ((clauseMap.containsKey(clause) && !clause.negated) ||
                 (!clauseMap.containsKey(clause) && clause.negated));
+        print("$clause : $allClausesHaveAFact");
       }
     }
+
+    print(
+        "Finally, do all clauses have a fact? $allClausesHaveAFact, is it new? $firstFact");
 
     //finally, the rule can be considered true or false, in which case the consequence has to be executed
     if (allClausesHaveAFact && firstFact) {

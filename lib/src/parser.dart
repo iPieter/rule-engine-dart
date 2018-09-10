@@ -33,7 +33,7 @@ class Parser {
       return _tokenList[_index++];
   }
 
-  peekToken({int amount : 0}) {
+  peekToken({int amount: 0}) {
     if (_index + amount >= _tokenList.length)
       return null;
     else
@@ -122,12 +122,13 @@ class Parser {
     result = new ArithmeticNode(term);
 
     Token lookahead = peekToken();
-    if( [TokenType.PLUS, TokenType.MINUS].contains(lookahead.type) ) {
+    while ([TokenType.PLUS, TokenType.MINUS].contains(lookahead.type)) {
       Token operation = consumeToken();
       assertTokenList(operation, [TokenType.PLUS, TokenType.MINUS]);
       Node term = buildTerm();
-      
+
       result.addOperation(operation.name, term);
+      lookahead = peekToken();
     }
 
     return result;
@@ -140,11 +141,12 @@ class Parser {
     result = new ArithmeticNode(factor);
 
     Token lookahead = peekToken();
-    if( [TokenType.MULTIPLY, TokenType.DIVIDE].contains(lookahead.type) ) {
+    while ([TokenType.MULTIPLY, TokenType.DIVIDE].contains(lookahead.type)) {
       Token operation = consumeToken();
       assertTokenList(operation, [TokenType.MULTIPLY, TokenType.DIVIDE]);
       Node factor = buildFactor();
       result.addOperation(operation.name, factor);
+      lookahead = peekToken();
     }
 
     return result;
@@ -154,7 +156,7 @@ class Parser {
     Node result;
 
     Token lookahead = peekToken();
-    if(lookahead.type == TokenType.LEFT_PAREN) {
+    if (lookahead.type == TokenType.LEFT_PAREN) {
       assertToken(consumeToken(), TokenType.LEFT_PAREN);
       result = buildExpression();
       assertToken(consumeToken(), TokenType.RIGHT_PAREN);
@@ -166,7 +168,6 @@ class Parser {
   }
 
   Node buildConditionSide() {
-
     Token clauseSubject = consumeToken();
 
     Node result;

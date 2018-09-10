@@ -25,6 +25,30 @@ end
   expect(results.length, equals(2));
 }
 
+void _sameFactsTest() {
+  String code = r"""
+rule "weekly saver"
+  when
+      SimpleFact( name == "Bob", amount > 10 )
+      SimpleFact( name == "Jane", amount > 10 )
+  then
+      publish Achievement( "test" )
+end
+""";
+  var ruleEngine = new RuleEngine(code);
+
+  var results = new List();
+  ruleEngine.registerListener((t, a) {
+    results.add(t);
+  });
+
+  ruleEngine.insertFact(new SimpleFact("Bob", 11, new DateTime.now()));
+  expect(results.length, equals(0));
+
+  ruleEngine.insertFact(new SimpleFact("Jane", 12, new DateTime.now()));
+  expect(results.length, equals(1));
+}
+
 void _minTest() {
   String code = r"""
 rule "weekly saver"
@@ -116,6 +140,7 @@ end
   //shouldn't emit a fact
   ruleEngine.insertFact(new SimpleFact("Jef", 12, new DateTime.now()));
   expect(num.tryParse(results[0]), equals(10));
+  expect(results.length, equals(1));
 
   ruleEngine.insertFact(new SimpleFact("Bob", 20, new DateTime.now()));
   expect(num.tryParse(results[1]), equals(30));
@@ -152,6 +177,7 @@ end
 
 void main() {
   test('Basic test: insertion of facts', _basicTest);
+  test('Matching of 2 facts of same type', _sameFactsTest);
   test('Testing of min-aggregate', _minTest);
   test('Testing of max-aggregate', _maxTest);
   test('Testing of sum-aggregate', _sumTest);
