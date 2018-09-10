@@ -1,6 +1,10 @@
 # rule_engine
 
+A zero-dependency rule engine for Dart and Flutter with Drools-like syntax.
+
 [![Build Status](https://travis-ci.org/iPieter/rule_engine_dart.svg?branch=master)](https://travis-ci.org/iPieter/rule_engine_dart)
+[![License: MIT](https://img.shields.io/github/license/ipieter/rule_engine_dart.svg)](https://github.com/iPieter/rule_engine_dart/blob/master/LICENSE)
+[![Pub](https://img.shields.io/pub/v/rule_engine.svg)](https://pub.dartlang.org/packages/rule_engine)
 
 ## Features
 
@@ -98,7 +102,7 @@ So each clause matches one type of fact, followed by zero or more conditions or 
   ```
   SimpleFact( sum( amount ) > 1000 )
   ```
-  This will evaluate to true if the sum of all matching facts is over 1000. In addition to the `sum()` operation, ~~`min()`, `max()`~~ _(not yet implemented)_ and `average()` are available as well.
+  This will evaluate to true if the sum of all matching facts is over 1000. In addition to the `sum()` operation, `min()`, `max()` and `average()` are available as well.
 
 In addition to these elements of a clause, they can also be negated. This means a clause will fail if a fact matching the entire clause is present, allowing it to halt the entire rule.
 
