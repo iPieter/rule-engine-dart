@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import "token.dart";
 import 'rule.dart';
 import 'clause.dart';
@@ -58,7 +56,6 @@ class Parser {
 
   exitWithError(String error, Token position) {
     int begin = 0;
-    int j = 1;
     while (position.pos - begin > 0 &&
         _code.codeUnitAt(position.pos - begin) != '\n'.codeUnitAt(0)) begin++;
 
