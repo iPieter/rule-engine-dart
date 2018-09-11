@@ -5,17 +5,17 @@ import 'consequence.dart';
 
 class Rule {
   String _name;
-  List<Clause> _clauses;
+  List<Clause> clauses;
   Consequence consequence;
   Map<Clause, List<Fact>> _matchedFacts;
 
   Rule(this._name) {
-    _clauses = new List();
+    clauses = new List();
     _matchedFacts = new Map();
   }
 
   addClause(Clause c) {
-    _clauses.add(c);
+    clauses.add(c);
     _matchedFacts[c] = new List();
   }
 
@@ -30,7 +30,7 @@ class Rule {
     Map<String, dynamic> _symbolTable = new Map();
     _symbolTable["\$ruleName"] = _name;
     print("evaluating for $fact");
-    var iterator = _clauses.iterator;
+    var iterator = clauses.iterator;
     while (iterator.moveNext()) {
       var clause = iterator.current;
       bool isTrueFact =
@@ -50,7 +50,7 @@ class Rule {
 
     if (firstFact) {
       //if the inserted fact (firstFact) evaluates to true, all other facts have to find a matching value
-      for (Clause clause in _clauses) {
+      for (Clause clause in clauses) {
         if (!clauseMap.containsKey(clause) &&
             _matchedFacts[clause].length > 0) {
           clauseMap[clause] = _matchedFacts[clause].first;
@@ -64,7 +64,7 @@ class Rule {
       }
 
       //finally check of each clause has a fact
-      for (Clause clause in _clauses) {
+      for (Clause clause in clauses) {
         allClausesHaveAFact = allClausesHaveAFact &&
             ((clauseMap.containsKey(clause) && !clause.negated) ||
                 (!clauseMap.containsKey(clause) && clause.negated));
@@ -89,6 +89,6 @@ class Rule {
   }
 
   toString() {
-    return "{Rule: $_name, clauses:$_clauses }";
+    return "{Rule: $_name, clauses:$clauses }";
   }
 }

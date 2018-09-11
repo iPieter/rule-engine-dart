@@ -4,14 +4,14 @@ import 'assignment.dart';
 import 'condition.dart';
 
 class Clause {
-  String _type;
+  String type;
   List<Assignment> _assignments;
-  List<Condition> _conditions;
+  List<Condition> conditions;
   bool negated;
 
-  Clause(this._type, this.negated) {
+  Clause(this.type, this.negated) {
     _assignments = new List();
-    _conditions = new List();
+    conditions = new List();
   }
 
   addAssignment(Assignment a) {
@@ -19,7 +19,7 @@ class Clause {
   }
 
   addCondition(Condition c) {
-    _conditions.add(c);
+    conditions.add(c);
   }
 
   /// Each [Clause] has a few different options to evaluate:
@@ -32,7 +32,7 @@ class Clause {
   bool evaluateClause(
       Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
     bool validClause = true;
-    validClause = validClause && fact.runtimeType.toString() == _type;
+    validClause = validClause && fact.runtimeType.toString() == type;
 
     Map<String, dynamic> clauseTable = new Map();
 
@@ -42,7 +42,7 @@ class Clause {
       }
     }
 
-    Iterator<Condition> iterator = _conditions.iterator;
+    Iterator<Condition> iterator = conditions.iterator;
     while (validClause && iterator.moveNext()) {
       validClause = validClause &&
           iterator.current
@@ -61,6 +61,6 @@ class Clause {
   }
 
   String toString() {
-    return "{Clause: $_type, $_assignments, $_conditions }";
+    return "{Clause: $type, $_assignments, $conditions }";
   }
 }

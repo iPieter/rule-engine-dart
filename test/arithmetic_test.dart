@@ -90,7 +90,7 @@ end
   expect(results[0].attributeMap()["descr"], "500.0");
 }
 
-void _ComplexTest() {
+void _complexTest() {
   String code = r"""
 rule "Bob saved some money"
   when
@@ -120,7 +120,7 @@ void main() {
   test('Subtraction for symbol value', _basicSubTest);
   test('Multiplication for symbol value', _basicMulTest);
   test('Division for symbol value', _basicDivTest);
-  //test('Complex for symbol value', _ComplexTest);
+  //test('Complex for symbol value', _complexTest);
 }
 
 class Expense extends Fact {
