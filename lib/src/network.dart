@@ -70,7 +70,21 @@ class AttributeAlphaNode implements AlphaNode {
   /// course, making sure static conditions come first will improve performance.
   /// Regardless of final order, this function will take the #[position] element
   /// of a clause and add it to the list.
-  void compileCondition(Clause clause, int position) {}
+  void compileCondition(Clause clause, int position) {
+    while (position < clause.conditions.length &&
+        !clause.conditions[position].hasStaticSide()) position++;
+    if (position < clause.conditions.length) {
+      if (clause.conditions[position].hasStaticSide()) {
+        // there is a static side, thus use it for the following node
+        var staticSide = clause.conditions[position].obtainStaticSide();
+        if (!_nodes.containsKey(staticSide)) {
+          var attributeAlphaNode = new AttributeAlphaNode();
+          attributeAlphaNode.compileCondition(clause, position++);
+          _nodes[staticSide] = attributeAlphaNode;
+        } else {}
+      } else {}
+    }
+  }
 }
 
 /// The RETE algorithm doesn't describe how to handle dynamic values, like the
