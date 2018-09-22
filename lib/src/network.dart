@@ -26,6 +26,8 @@ abstract class AlphaNode {
   void propagate(Fact fact);
 }
 
+class BetaNode {}
+
 class TypeAlphaNode implements AlphaNode {
   Map<String, AlphaNode> _attributeNodes = new HashMap();
 
@@ -34,12 +36,12 @@ class TypeAlphaNode implements AlphaNode {
   ///
   /// For this reason, if no attributes are suitable, an [MemoryAlphaNode] might
   /// follow directly. This is the same as in the [AttributeAlphaNode].
-  void compileClause(Clause clause) {
+  BetaNode compileClause(Clause clause) {
     for (Condition condition in clause.conditions) {
       if (condition.hasStaticSide() &&
           !_attributeNodes.containsKey(condition.obtainStaticSide())) {
         var attributeAlphaNode = new AttributeAlphaNode();
-        attributeAlphaNode.compileCondition(clause, 0);
+        attributeAlphaNode.compileCondition(clause, 0, new List());
       }
     }
   }
@@ -70,27 +72,53 @@ class AttributeAlphaNode implements AlphaNode {
   /// course, making sure static conditions come first will improve performance.
   /// Regardless of final order, this function will take the #[position] element
   /// of a clause and add it to the list.
-  void compileCondition(Clause clause, int position) {
+  MemoryAlphaNode compileCondition(
+      Clause clause, int position, List<Condition> finalConditions) {
     while (position < clause.conditions.length &&
-        !clause.conditions[position].hasStaticSide()) position++;
+        !clause.conditions[position].hasStaticSide()) {
+      finalConditions.add(clause.conditions[position]);
+      position++;
+    }
+
     if (position < clause.conditions.length) {
       if (clause.conditions[position].hasStaticSide()) {
         // there is a static side, thus use it for the following node
         var staticSide = clause.conditions[position].obtainStaticSide();
         if (!_nodes.containsKey(staticSide)) {
           var attributeAlphaNode = new AttributeAlphaNode();
-          attributeAlphaNode.compileCondition(clause, position++);
+          attributeAlphaNode.compileCondition(
+              clause, position++, finalConditions);
           _nodes[staticSide] = attributeAlphaNode;
-        } else {}
-      } else {}
+        } else {
+          var n = _nodes[staticSide] as AttributeAlphaNode;
+          n.compileCondition(clause, position++, finalConditions);
+          ;
+        }
+      } else {
+        print(
+            "clause doesn't have static side, but a static side is expected. Something is very wrong.");
+      }
+
+      position++;
+      compileCondition(clause, position, finalConditions);
     }
+  }
+
+  @override
+  void propagate(Fact fact) {
+    // TODO: implement propagate
   }
 }
 
 /// The RETE algorithm doesn't describe how to handle dynamic values, like the
 /// sum or sliding window functions offered in this package. In this implementation,
 /// these reside in a [DynamicAlphaNode] just before a [MemoryAlphaNode].
-class DynamicAlphaNode implements AlphaNode {}
+class DynamicAlphaNode implements AlphaNode {
+  @override
+  void propagate(Fact fact) {
+    // TODO: implement propagate
+  }
+}
 
 /// The [MemoryAlphaNode] is special type of alpha node, since it is not only
 /// part of the network, but also provides a cache. These are placed before the
@@ -102,4 +130,9 @@ class DynamicAlphaNode implements AlphaNode {}
 /// the execution state of all facts.
 class MemoryAlphaNode implements AlphaNode {
   Map<Fact, bool> alphaMemory = new LinkedHashMap();
+
+  @override
+  void propagate(Fact fact) {
+    // TODO: implement propagate
+  }
 }
