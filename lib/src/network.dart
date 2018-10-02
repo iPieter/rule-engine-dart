@@ -17,6 +17,8 @@ class Network {
           .compileClause(clause);
     }
   }
+
+  void addFact(Fact f) {}
 }
 
 abstract class AlphaNode {
@@ -26,7 +28,11 @@ abstract class AlphaNode {
   void propagate(Fact fact);
 }
 
-class BetaNode {}
+/// [BetaNode]s contain symbolic links to [MemoryAlphaNode]s, which they use
+/// for joining all those alpha networks together.
+class BetaNode {
+  List<MemoryAlphaNode> memoryNodes = new List();
+}
 
 class TypeAlphaNode implements AlphaNode {
   Map<String, AlphaNode> _attributeNodes = new HashMap();
@@ -132,7 +138,5 @@ class MemoryAlphaNode implements AlphaNode {
   Map<Fact, bool> alphaMemory = new LinkedHashMap();
 
   @override
-  void propagate(Fact fact) {
-    // TODO: implement propagate
-  }
+  void propagate(Fact fact) {}
 }
