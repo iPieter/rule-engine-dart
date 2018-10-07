@@ -29,7 +29,7 @@ class Network {
       var memorynode = new MemoryAlphaNode(dynamicConditions);
       typeNodes
           .putIfAbsent(clause.type, () => new AttributeAlphaNode())
-          .compileCondition(clause, 0, memorynode);
+          .compileCondition(staticConditions, 0, memorynode);
       betanode.addMemoryNode(memorynode);
     }
 
@@ -100,31 +100,28 @@ class AttributeAlphaNode implements AlphaNode {
   /// course, making sure static conditions come first will improve performance.
   /// Regardless of final order, this function will take the #[position] element
   /// of a clause and add it to the list.
-  void compileCondition(
-      Clause clause, int position, MemoryAlphaNode finalConditions) {
+  void compileCondition(List<Condition> staticConditions, int position,
+      MemoryAlphaNode memoryAlphaNode) {
     print("compiling clause position $position");
-    while (position < clause.conditions.length &&
-        !clause.conditions[position].hasStaticSide()) {
-      finalConditions.addCondition(clause.conditions[position]);
-      position++;
-    }
 
-    print("skipped to clause position $position");
-
-    if (position < clause.conditions.length) {
-      if (clause.conditions[position].hasStaticSide()) {
+    if (position < staticConditions.length) {
+      if (staticConditions[position].hasStaticSide()) {
         // there is a static side, thus use it for the following node
-        var staticSide = clause.conditions[position].obtainStaticSide();
+        var staticSide = staticConditions[position].obtainStaticSide();
         if (!nodes.containsKey(staticSide)) {
           print("adding node for condition $staticSide");
-
-          var attributeAlphaNode = new AttributeAlphaNode();
-          nodes[staticSide] = attributeAlphaNode;
-          attributeAlphaNode.compileCondition(
-              clause, ++position, finalConditions);
+          if (staticConditions.length > position + 1) {
+            print("${staticConditions.length} > $position");
+            var attributeAlphaNode = new AttributeAlphaNode();
+            nodes[staticSide] = attributeAlphaNode;
+            attributeAlphaNode.compileCondition(
+                staticConditions, ++position, memoryAlphaNode);
+          } else {
+            nodes[staticSide] = memoryAlphaNode;
+          }
         } else {
           var n = nodes[staticSide] as AttributeAlphaNode;
-          n.compileCondition(clause, ++position, finalConditions);
+          n.compileCondition(staticConditions, ++position, memoryAlphaNode);
           ;
         }
       } else {
