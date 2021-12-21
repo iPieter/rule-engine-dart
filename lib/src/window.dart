@@ -1,21 +1,14 @@
 class Window {
-  String start;
-  String end;
-  Map<String, String> durationArguments;
-
-  DateTime _beginTime;
-  DateTime _endTime;
-
-  Window() {
-    start = "";
-    end = "";
-    durationArguments = new Map<String, String>();
-  }
+  final Map<String, String> durationArguments = {};
+  String start = '';
+  String end = '';
+  DateTime? _beginTime;
+  DateTime? _endTime;
 
   bool contains(DateTime moment) {
     if (_beginTime == null || _endTime == null) _parseTime();
 
-    return moment.isAfter(_beginTime) && moment.isBefore(_endTime);
+    return moment.isAfter(_beginTime!) && moment.isBefore(_endTime!);
   }
 
   /// Internal function to parse the provided arguments of a [Window].
@@ -28,7 +21,7 @@ class Window {
       _endTime = DateTime.parse(end);
     }
 
-    Duration duration = new Duration(
+    Duration duration = Duration(
       days: int.parse(durationArguments["days"] ?? "0"),
       hours: int.parse(durationArguments["hours"] ?? "0"),
       minutes: int.parse(durationArguments["minutes"] ?? "0"),
@@ -38,12 +31,12 @@ class Window {
     );
 
     if (_beginTime == null && _endTime == null) {
-      _endTime = new DateTime.now();
+      _endTime = DateTime.now();
     }
 
-    if (_beginTime == null) _beginTime = _endTime.subtract(duration);
+    if (_beginTime == null) _beginTime = _endTime?.subtract(duration);
 
-    if (_endTime == null) _endTime = _beginTime.add(duration);
+    if (_endTime == null) _endTime = _beginTime?.add(duration);
   }
 
   String toString() {

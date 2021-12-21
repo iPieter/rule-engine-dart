@@ -4,15 +4,12 @@ import 'assignment.dart';
 import 'condition.dart';
 
 class Clause {
-  String _type;
-  List<Assignment> _assignments;
-  List<Condition> _conditions;
-  bool negated;
+  final String _type;
+  final bool negated;
+  final List<Assignment> _assignments = [];
+  final List<Condition> _conditions = [];
 
-  Clause(this._type, this.negated) {
-    _assignments = new List();
-    _conditions = new List();
-  }
+  Clause(String type, this.negated) : _type = type;
 
   addAssignment(Assignment a) {
     _assignments.add(a);
@@ -34,10 +31,10 @@ class Clause {
     bool validClause = true;
     validClause = validClause && fact.runtimeType.toString() == _type;
 
-    Map<String, dynamic> clauseTable = new Map();
+    Map<String, dynamic> clauseTable = Map();
 
     if (validClause) {
-      for (var assignment in _assignments) {
+      for (final assignment in _assignments) {
         assignment.evaluateAssignment(symbolTable, clauseTable, facts, fact);
       }
     }

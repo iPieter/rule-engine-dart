@@ -11,9 +11,9 @@ rule "weekly saver"
       publish Achievement( "test" )
 end
 """;
-  Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList(), code);
-  var result = parser.buildTree();
+  Lexer lexer = Lexer(code);
+  Parser parser = Parser(lexer.getTokenList(), code);
+  final result = parser.buildTree();
   expect(result.length, equals(1));
 }
 
@@ -26,9 +26,9 @@ rule "weekly saver"
       publish Achievement( "test" )
 end
 """;
-  Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList(), code);
-  var result = parser.buildTree();
+  Lexer lexer = Lexer(code);
+  Parser parser = Parser(lexer.getTokenList(), code);
+  final result = parser.buildTree();
   expect(result.length, equals(1));
 }
 
@@ -45,9 +45,9 @@ end
   bool thrownError = false;
 
   try {
-    Lexer lexer = new Lexer(code);
-    Parser parser = new Parser(lexer.getTokenList(), code);
-    var result = parser.buildTree();
+    Lexer lexer = Lexer(code);
+    Parser parser = Parser(lexer.getTokenList(), code);
+    final result = parser.buildTree();
     expect(result, isNot(null));
   } catch (e) {
     thrownError = true;
@@ -71,9 +71,9 @@ end
   bool thrownError = false;
 
   try {
-    Lexer lexer = new Lexer(code);
-    Parser parser = new Parser(lexer.getTokenList(), code);
-    var result = parser.buildTree();
+    Lexer lexer = Lexer(code);
+    Parser parser = Parser(lexer.getTokenList(), code);
+    final result = parser.buildTree();
     expect(result.length, equals(1));
   } catch (e) {
     thrownError = true;
@@ -91,9 +91,9 @@ rule "weekly saver"
       publish Achievement( "test" )
 end
 """;
-  Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList(), code);
-  var result = parser.buildTree();
+  Lexer lexer = Lexer(code);
+  Parser parser = Parser(lexer.getTokenList(), code);
+  final result = parser.buildTree();
   expect(result.length, equals(1));
 }
 
@@ -108,9 +108,9 @@ rule "weekly saver"
       publish Achievement( "test" )
 end
 """;
-  Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList(), code);
-  var result = parser.buildTree();
+  Lexer lexer = Lexer(code);
+  Parser parser = Parser(lexer.getTokenList(), code);
+  final result = parser.buildTree();
   print(result[0]);
   expect(result.length, equals(1));
 }
@@ -124,9 +124,9 @@ rule "weekly saver"
       publish Achievement( "test" )
 end
 """;
-  Lexer lexer = new Lexer(code);
-  Parser parser = new Parser(lexer.getTokenList(), code);
-  var result = parser.buildTree();
+  Lexer lexer = Lexer(code);
+  Parser parser = Parser(lexer.getTokenList(), code);
+  final result = parser.buildTree();
   print(result[0]);
   expect(result.length, equals(1));
 }

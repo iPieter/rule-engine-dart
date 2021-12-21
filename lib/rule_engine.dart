@@ -23,21 +23,17 @@ export 'package:rule_engine/src/nodes/node.dart';
 export 'package:rule_engine/src/nodes/symbol_node.dart';
 
 class RuleEngine {
-  List<Rule> _rules;
-  List<Function> _listeners;
+  final List<Function> _listeners = [];
+  late List<Rule> _rules;
 
   /// Create a new [RuleEngine] object and automatically parse the [code]
   /// given as an attribute. This string can consist of multiple rules.
   ///
-  /// Parsing errrors are printed to stdout.
+  /// Parsing errors are printed to stdout.
   RuleEngine(String code) {
-    _listeners = new List();
-
-    Lexer lexer = new Lexer(code);
-    var tokens = lexer.getTokenList();
-    //tokens.forEach((e) => print(e) );
-
-    Parser parser = new Parser(tokens, code);
+    final lexer = Lexer(code);
+    final tokens = lexer.getTokenList();
+    final parser = Parser(tokens, code);
 
     this._rules = parser.buildTree();
   }

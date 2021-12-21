@@ -4,13 +4,17 @@ import 'nodes/symbol_node.dart';
 import 'nodes/node.dart';
 
 class Assignment {
-  SymbolNode _symbolNode;
-  Node _rhs;
+  final SymbolNode _symbolNode;
+  final Node _rhs;
 
-  Assignment(this._symbolNode, this._rhs);
+  const Assignment(this._symbolNode, this._rhs);
 
-  bool evaluateAssignment(Map<String, dynamic> symbolTable,
-      Map<String, dynamic> clauseTable, List<Fact> facts, Fact fact) {
+  bool evaluateAssignment(
+    Map<String, dynamic> symbolTable,
+    Map<String, dynamic> clauseTable,
+    List<Fact> facts,
+    Fact fact,
+  ) {
     if (symbolTable.containsKey(_symbolNode.getName()) ||
         clauseTable.containsKey(_symbolNode.getName())) {
       print(

@@ -1,13 +1,11 @@
 import 'token.dart';
 
 class Lexer {
-  int _pos;
-  String _code;
-  Map<String, TokenType> _tokenTypeMap;
+  final String _code;
+  final Map<String, TokenType> _tokenTypeMap = {};
+  int _pos = 0;
 
   Lexer(this._code) {
-    _pos = 0;
-    _tokenTypeMap = new Map();
     _tokenTypeMap['('] = TokenType.LEFT_PAREN;
     _tokenTypeMap[')'] = TokenType.RIGHT_PAREN;
     _tokenTypeMap['{'] = TokenType.LEFT_BRACKET;
@@ -41,11 +39,11 @@ class Lexer {
   }
 
   List<Token> getTokenList() {
-    var result = new List<Token>();
+    final result = <Token>[];
 
-    RegExp whitespaceRegex = new RegExp(r"\s");
-    RegExp identifierRegex = new RegExp(r"[a-zA-Z]");
-    RegExp digitRegex = new RegExp(r"\d");
+    RegExp whitespaceRegex = RegExp(r"\s");
+    RegExp identifierRegex = RegExp(r"[a-zA-Z]");
+    RegExp digitRegex = RegExp(r"\d");
 
     var c = '';
     while (_pos + 1 < _code.length) {
@@ -53,19 +51,18 @@ class Lexer {
       switch (c) {
         case '':
           return result;
-          break;
         case '"':
           var tokenName = "";
-          var start = _pos - 1;
+          final start = _pos - 1;
           while ((c = consumeChar()) != "\"") {
             tokenName += c;
           }
-          result.add(new Token(TokenType.STRING, tokenName, start));
+          result.add(Token(TokenType.STRING, tokenName, start));
           break;
         default:
           if (!whitespaceRegex.hasMatch(c)) {
             var tokenName = "" + c;
-            var start = _pos - 1;
+            final start = _pos - 1;
 
             if (c == '-' && digitRegex.hasMatch(peekChar())) {
               while (digitRegex.hasMatch(peekChar())) {
@@ -76,16 +73,15 @@ class Lexer {
                 while (digitRegex.hasMatch(peekChar())) {
                   tokenName += consumeChar();
                 }
-                result
-                    .add(new Token(TokenType.FLOATING_POINT, tokenName, start));
+                result.add(Token(TokenType.FLOATING_POINT, tokenName, start));
               } else {
-                result.add(new Token(TokenType.INTEGER, tokenName, start));
+                result.add(Token(TokenType.INTEGER, tokenName, start));
               }
               break;
             }
 
             if (_tokenTypeMap.containsKey(c)) {
-              result.add(new Token(_tokenTypeMap[c], c, _pos - 1));
+              result.add(Token(_tokenTypeMap[c]!, c, _pos - 1));
               break;
             }
 
@@ -98,10 +94,9 @@ class Lexer {
                 while (digitRegex.hasMatch(peekChar())) {
                   tokenName += consumeChar();
                 }
-                result
-                    .add(new Token(TokenType.FLOATING_POINT, tokenName, start));
+                result.add(Token(TokenType.FLOATING_POINT, tokenName, start));
               } else {
-                result.add(new Token(TokenType.INTEGER, tokenName, start));
+                result.add(Token(TokenType.INTEGER, tokenName, start));
               }
               break;
             }
@@ -109,7 +104,7 @@ class Lexer {
             while (identifierRegex.hasMatch(peekChar())) {
               tokenName += consumeChar();
             }
-            result.add(new Token(TokenType.IDENTIFIER, tokenName, start));
+            result.add(Token(TokenType.IDENTIFIER, tokenName, start));
           }
           break;
       }

@@ -2,23 +2,26 @@ import 'package:rule_engine/src/fact.dart';
 import 'package:rule_engine/src/nodes/node.dart';
 
 class Consequence {
-  String _type;
-  List<Node> _arguments;
+  final String _type;
+  final List<Node> _arguments = [];
 
-  Consequence(this._type) {
-    _arguments = new List();
-  }
+  Consequence(this._type);
 
   String getType() {
     return _type;
   }
 
   List<String> getArguments(
-      Map<String, dynamic> symbolTable, List<Fact> facts, Fact fact) {
-    List<String> args = new List();
+    Map<String, dynamic> symbolTable, [
+    List<Fact> facts = const [],
+    Fact? fact,
+  ]) {
+    final args = <String>[];
 
     for (Node node in _arguments) {
-      args.add(node.getValue(symbolTable, facts, fact));
+      final value = node.getValue(symbolTable, facts, fact);
+      if (value == null) continue;
+      args.add(value);
     }
 
     return args;

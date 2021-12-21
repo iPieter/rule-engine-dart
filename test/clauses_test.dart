@@ -1,4 +1,3 @@
-import 'package:rule_engine/src/fact.dart';
 import 'package:rule_engine/rule_engine.dart';
 import 'package:test/test.dart';
 
@@ -11,17 +10,17 @@ rule "weekly saver"
       publish Achievement( "test" )
 end
 """;
-  var ruleEngine = new RuleEngine(code);
+  final ruleEngine = RuleEngine(code);
 
-  var results = new List();
+  final results = [];
   ruleEngine.registerListener((t, a) {
     results.add(t);
   });
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 11, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 11, DateTime.now()));
   expect(results.length, equals(1));
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 12, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 12, DateTime.now()));
   expect(results.length, equals(2));
 }
 
@@ -34,17 +33,17 @@ rule "weekly saver"
       publish Test( $value )
 end
 """;
-  var ruleEngine = new RuleEngine(code);
+  final ruleEngine = RuleEngine(code);
 
-  var results = new List();
+  final results = [];
   ruleEngine.registerListener((t, a) {
     results.add(a[0]);
   });
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 11, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 11, DateTime.now()));
   expect(num.tryParse(results[0]), equals(11));
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 12, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 12, DateTime.now()));
   expect(num.tryParse(results[1]), equals(11));
 }
 
@@ -57,17 +56,17 @@ rule "weekly saver"
       publish Test( $value )
 end
 """;
-  var ruleEngine = new RuleEngine(code);
+  final ruleEngine = RuleEngine(code);
 
-  var results = new List();
+  final results = [];
   ruleEngine.registerListener((t, a) {
     results.add(a[0]);
   });
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 11, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 11, DateTime.now()));
   expect(num.tryParse(results[0]), equals(11));
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 12, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 12, DateTime.now()));
   expect(num.tryParse(results[1]), equals(12));
 }
 
@@ -80,17 +79,17 @@ rule "weekly saver"
       publish Test( $value )
 end
 """;
-  var ruleEngine = new RuleEngine(code);
+  final ruleEngine = RuleEngine(code);
 
-  var results = new List();
+  final results = [];
   ruleEngine.registerListener((t, a) {
     results.add(a[0]);
   });
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 10, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 10, DateTime.now()));
   expect(num.tryParse(results[0]), equals(10));
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 12, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 12, DateTime.now()));
   expect(num.tryParse(results[1]), equals(22));
 }
 
@@ -103,27 +102,27 @@ rule "weekly saver"
       publish Test( $value )
 end
 """;
-  var ruleEngine = new RuleEngine(code);
+  final ruleEngine = RuleEngine(code);
 
-  var results = new List();
+  final results = [];
   ruleEngine.registerListener((t, a) {
     results.add(a[0]);
   });
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 10, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 10, DateTime.now()));
   expect(num.tryParse(results[0]), equals(10));
 
   //shouldn't emit a fact
-  ruleEngine.insertFact(new SimpleFact("Jef", 12, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Jef", 12, DateTime.now()));
   expect(num.tryParse(results[0]), equals(10));
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 20, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 20, DateTime.now()));
   expect(num.tryParse(results[1]), equals(30));
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 30, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 30, DateTime.now()));
   expect(num.tryParse(results[2]), equals(60));
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 40, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 40, DateTime.now()));
   expect(num.tryParse(results[3]), equals(100));
 }
 
@@ -136,17 +135,17 @@ rule "weekly saver"
       publish Test( $value )
 end
 """;
-  var ruleEngine = new RuleEngine(code);
+  final ruleEngine = RuleEngine(code);
 
-  var results = new List();
+  final results = [];
   ruleEngine.registerListener((t, a) {
     results.add(a[0]);
   });
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 10, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 10, DateTime.now()));
   expect(num.tryParse(results[0]), equals(10));
 
-  ruleEngine.insertFact(new SimpleFact("Bob", 20, new DateTime.now()));
+  ruleEngine.insertFact(SimpleFact("Bob", 20, DateTime.now()));
   expect(num.tryParse(results[1]), equals(15));
 }
 
@@ -168,7 +167,7 @@ class SimpleFact extends Fact {
 
   @override
   Map<String, dynamic> attributeMap() {
-    Map<String, dynamic> attributes = new Map<String, dynamic>();
+    Map<String, dynamic> attributes = Map<String, dynamic>();
     attributes["name"] = _name;
     attributes["amount"] = _amount;
     attributes["created"] = _created;
