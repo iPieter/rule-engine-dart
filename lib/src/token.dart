@@ -20,17 +20,13 @@ enum TokenType {
 }
 
 class Token {
-  TokenType _type;
-  String _name;
-  int _pos;
+  final TokenType type;
+  final String name;
+  final int pos;
 
-  Token(this._type, this._name, this._pos);
+  const Token(this.type, this.name, this.pos);
 
   toString() {
-    return "{$_type:$_name @ pos $_pos}";
+    return "{$type:$name @ pos $pos}";
   }
-
-  get type => _type;
-  get name => _name;
-  get pos => _pos;
 }

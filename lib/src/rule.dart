@@ -4,38 +4,39 @@ import "clause.dart";
 import 'consequence.dart';
 
 class Rule {
-  String _name;
-  List<Clause> _clauses;
-  Consequence consequence;
-  Map<Clause, List<Fact>> _matchedFacts;
+  final String _name;
+  final List<Clause> _clauses = [];
+  final Map<Clause, List<Fact>> _matchedFacts = {};
+  Consequence? consequence;
 
-  Rule(this._name) {
-    _clauses = new List();
-    _matchedFacts = new Map();
-  }
+  Rule(this._name);
 
   addClause(Clause c) {
     _clauses.add(c);
-    _matchedFacts[c] = new List();
+    _matchedFacts[c] = [];
   }
 
   bool evaluateRule(Fact fact, List<Function> callbacks) {
+    final Map<Clause, Fact> clauseMap = Map();
+    final Map<String, dynamic> _symbolTable = Map();
     bool firstFact = true;
-    Map<Clause, Fact> clauseMap = new Map();
-    Map<String, dynamic> _symbolTable = new Map();
     _symbolTable["\$ruleName"] = _name;
 
-    var iterator = _clauses.iterator;
+    final iterator = _clauses.iterator;
     while (iterator.moveNext()) {
-      var clause = iterator.current;
-      bool isTrueFact =
-          clause.evaluateClause(_symbolTable, _matchedFacts[clause], fact);
+      final clause = iterator.current;
+      final matchedFact = _matchedFacts[clause]!;
+      bool isTrueFact = clause.evaluateClause(
+        _symbolTable,
+        matchedFact,
+        fact,
+      );
       firstFact = firstFact && (isTrueFact || clause.negated);
       //isTrueFact = clause.negated ? !isTrueFact : isTrueFact;
 
       if (isTrueFact) {
         clauseMap[clause] = fact;
-        _matchedFacts[clause].add(fact);
+        matchedFact.add(fact);
       }
     }
 
@@ -44,9 +45,9 @@ class Rule {
     if (firstFact) {
       //if the inserted fact (firstFact) evaluates to true, all other facts have to find a matching value
       for (Clause clause in _clauses) {
-        if (!clauseMap.containsKey(clause) &&
-            _matchedFacts[clause].length > 0) {
-          clauseMap[clause] = _matchedFacts[clause].first;
+        final matchedFact = _matchedFacts[clause]!;
+        if (!clauseMap.containsKey(clause) && matchedFact.length > 0) {
+          clauseMap[clause] = matchedFact.first;
         }
       }
 
@@ -61,10 +62,13 @@ class Rule {
     //finally, the rule can be considered true or false, in which case the consequence has to be executed
     if (allClausesHaveAFact && firstFact) {
       for (Function callback in callbacks) {
-        Function.apply(callback, [
-          consequence.getType(),
-          consequence.getArguments(_symbolTable, null, null)
-        ]);
+        Function.apply(
+          callback,
+          [
+            consequence?.getType(),
+            consequence?.getArguments(_symbolTable),
+          ],
+        );
       }
     }
 

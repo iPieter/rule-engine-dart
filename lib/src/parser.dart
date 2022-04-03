@@ -1,29 +1,23 @@
-import 'dart:collection';
-
-import "token.dart";
-import 'rule.dart';
-import 'clause.dart';
 import 'assignment.dart';
+import 'clause.dart';
 import 'condition.dart';
 import 'consequence.dart';
-import 'window.dart';
-import 'nodes/node.dart';
 import 'nodes/aggregate_node.dart';
-import 'nodes/symbol_node.dart';
 import 'nodes/attribute_node.dart';
-import 'nodes/literal_node.dart';
 import 'nodes/comparison_node.dart';
+import 'nodes/literal_node.dart';
+import 'nodes/node.dart';
+import 'nodes/symbol_node.dart';
+import 'rule.dart';
+import "token.dart";
+import 'window.dart';
 
 class Parser {
-  List<Token> _tokenList;
-  int _index;
-  bool _valid;
-  String _code;
+  final List<Token> _tokenList;
+  final String _code;
+  int _index = 0;
 
-  Parser(this._tokenList, this._code) {
-    _index = 0;
-    _valid = true;
-  }
+  Parser(this._tokenList, this._code);
 
   consumeToken() {
     if (_index + 1 > _tokenList.length)
@@ -57,7 +51,7 @@ class Parser {
 
   exitWithError(String error, Token position) {
     int begin = 0;
-    int j = 1;
+
     while (position.pos - begin > 0 &&
         _code.codeUnitAt(position.pos - begin) != '\n'.codeUnitAt(0)) begin++;
 
@@ -67,14 +61,14 @@ class Parser {
 
     print(_code.substring(position.pos - begin, position.pos + end));
 
-    StringBuffer sb = new StringBuffer();
+    StringBuffer sb = StringBuffer();
 
     for (int i = 1; i < begin; i++) sb.write(" ");
 
     print("$sb∧");
     print("$sb#=== $error");
 
-    throw new Error();
+    throw Error();
   }
 
   assertTokenList(Token token, List<TokenType> types, {String value: ""}) {
@@ -106,8 +100,8 @@ class Parser {
     // finally, match the rhs
     Node rhs = buildConditionSide(rhsToken);
 
-    SymbolNode symbolNode = new SymbolNode(clauseSubject.name);
-    assignment = new Assignment(symbolNode, rhs);
+    SymbolNode symbolNode = SymbolNode(clauseSubject.name);
+    assignment = Assignment(symbolNode, rhs);
 
     return assignment;
   }
@@ -122,18 +116,18 @@ class Parser {
       assertToken(attributeToken, TokenType.IDENTIFIER);
       assertToken(consumeToken(), TokenType.RIGHT_PAREN);
 
-      result = new AggregateNode(clauseSubject.name, attributeToken.name);
+      result = AggregateNode(clauseSubject.name, attributeToken.name);
     } else {
       // 3 cases left: literal, attribute or a symbol
       // symbol
       if (clauseSubject.name[0] == r"$")
-        result = new SymbolNode(clauseSubject.name);
+        result = SymbolNode(clauseSubject.name);
       // literal
       else if ([TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT]
           .contains(clauseSubject.type))
-        result = new LiteralNode(clauseSubject.name);
+        result = LiteralNode(clauseSubject.name);
       else
-        result = new AttributeNode(clauseSubject.name);
+        result = AttributeNode(clauseSubject.name);
     }
     return result;
   }
@@ -158,7 +152,7 @@ class Parser {
 
       var lookahead = peekToken();
 
-      Window window = new Window();
+      Window window = Window();
 
       while (lookahead.type != TokenType.RIGHT_PAREN) {
         Token t = consumeToken();
@@ -212,7 +206,7 @@ class Parser {
         lookahead = peekToken();
       }
 
-      result = new Condition.fromWindow(lhs, window);
+      result = Condition.fromWindow(lhs, window);
       assertToken(consumeToken(), TokenType.RIGHT_PAREN);
 
       return result;
@@ -224,15 +218,15 @@ class Parser {
         Token secondComparison = consumeToken();
         assertToken(secondComparison, TokenType.EQUALS);
         comparisonNode =
-            new ComparisonNode(firstComparison.name + secondComparison.name);
+            ComparisonNode(firstComparison.name + secondComparison.name);
       } else {
         if (firstComparison.type == TokenType.EQUALS) {
           Token secondComparison = consumeToken();
           assertToken(secondComparison, TokenType.EQUALS);
           comparisonNode =
-              new ComparisonNode(firstComparison.name + secondComparison.name);
+              ComparisonNode(firstComparison.name + secondComparison.name);
         } else {
-          comparisonNode = new ComparisonNode(firstComparison.name);
+          comparisonNode = ComparisonNode(firstComparison.name);
         }
       }
     }
@@ -241,7 +235,7 @@ class Parser {
     Token rhsToken = consumeToken();
     rhs = buildConditionSide(rhsToken);
 
-    result = new Condition(lhs, comparisonNode, rhs);
+    result = Condition(lhs, comparisonNode, rhs);
 
     return result;
   }
@@ -258,7 +252,7 @@ class Parser {
     assertToken(typeToken = consumeToken(), TokenType.IDENTIFIER);
     assertToken(consumeToken(), TokenType.LEFT_PAREN);
 
-    Clause result = new Clause(typeToken.name, negated);
+    Clause result = Clause(typeToken.name, negated);
 
     lookahead = peekToken();
 
@@ -268,11 +262,11 @@ class Parser {
 
         Token ll = peekToken();
         if (ll.type == TokenType.COLON) {
-          var assignment = buildAssignment(clauseSubject);
+          final assignment = buildAssignment(clauseSubject);
           //print(assignment.toString());
           result.addAssignment(assignment);
         } else {
-          var condition = buildCondition(clauseSubject);
+          final condition = buildCondition(clauseSubject);
           //print(condition.toString());
           result.addCondition(condition);
         }
@@ -291,22 +285,22 @@ class Parser {
 
     Token typeToken = consumeToken();
     assertToken(typeToken, TokenType.IDENTIFIER);
-    result = new Consequence(typeToken.name);
+    result = Consequence(typeToken.name);
     assertToken(consumeToken(), TokenType.LEFT_PAREN);
 
     Token lookahead = peekToken();
 
     while (lookahead.type != TokenType.RIGHT_PAREN) {
       Token clauseSubject = consumeToken();
-      Node node;
+      Node? node;
 
       if (clauseSubject.name[0] == r"$")
-        node = new SymbolNode(clauseSubject.name);
+        node = SymbolNode(clauseSubject.name);
       // literal
       else if ([TokenType.STRING, TokenType.INTEGER, TokenType.FLOATING_POINT]
-          .contains(clauseSubject.type))
-        node = new LiteralNode(clauseSubject.name);
-      result.addArgument(node);
+          .contains(clauseSubject.type)) node = LiteralNode(clauseSubject.name);
+
+      if (node != null) result.addArgument(node);
 
       lookahead = peekToken();
       if (lookahead.type == TokenType.COMMA)
@@ -325,7 +319,7 @@ class Parser {
 
     Token nameToken = consumeToken();
     assertToken(nameToken, TokenType.STRING);
-    Rule rule = new Rule(nameToken.name);
+    Rule rule = Rule(nameToken.name);
 
     assertToken(consumeToken(), TokenType.IDENTIFIER, value: "when");
 
@@ -348,10 +342,10 @@ class Parser {
   }
 
   List<Rule> buildTree() {
-    var result = new List<Rule>();
-    while (peekToken() != null && _valid) {
-      var rule = buildRule();
-      if (rule != null) result.add(rule);
+    final result = <Rule>[];
+    while (peekToken() != null) {
+      final rule = buildRule();
+      result.add(rule);
     }
     return result;
   }

@@ -1,4 +1,3 @@
-import 'package:rule_engine/src/fact.dart';
 import 'package:rule_engine/rule_engine.dart';
 import 'package:test/test.dart';
 
@@ -12,18 +11,18 @@ rule "expense"
     publish Achievement( "01", "Bob saved some money", $amount )
 end
 """;
-  var ruleEngine = new RuleEngine(code);
+  final ruleEngine = RuleEngine(code);
 
-  var results = new List();
+  final results = [];
   ruleEngine.registerListener((t, a) {
     results.add(a[0]);
   });
 
-  ruleEngine.insertFact(new Expense("Bob", 1000, "Cheese", new DateTime.now()));
+  ruleEngine.insertFact(Expense("Bob", 1000, "Cheese", DateTime.now()));
   expect(results.length, equals(1));
-  ruleEngine.insertFact(new Achievement("01", "Bob saved some money", 100));
+  ruleEngine.insertFact(Achievement("01", "Bob saved some money", 100));
 
-  ruleEngine.insertFact(new Expense("Bob", 2000, "Cheese", new DateTime.now()));
+  ruleEngine.insertFact(Expense("Bob", 2000, "Cheese", DateTime.now()));
   expect(results.length, equals(1));
 }
 
@@ -37,18 +36,18 @@ rule "expense"
     publish Achievement( "01", "Bob saved some money", $amount )
 end
 """;
-  var ruleEngine = new RuleEngine(code);
+  final ruleEngine = RuleEngine(code);
 
-  var results = new List();
+  final results = [];
   ruleEngine.registerListener((t, a) {
     results.add(a[0]);
   });
 
-  ruleEngine.insertFact(new Expense("Bob", 1000, "Cheese", new DateTime.now()));
+  ruleEngine.insertFact(Expense("Bob", 1000, "Cheese", DateTime.now()));
   expect(results.length, equals(1));
-  ruleEngine.insertFact(new Achievement("01", "Bob saved some money", 100));
+  ruleEngine.insertFact(Achievement("01", "Bob saved some money", 100));
 
-  ruleEngine.insertFact(new Expense("Bob", 2000, "Cheese", new DateTime.now()));
+  ruleEngine.insertFact(Expense("Bob", 2000, "Cheese", DateTime.now()));
   expect(results.length, equals(1));
 }
 
@@ -58,7 +57,7 @@ void main() {
 }
 
 class Expense extends Fact {
-  Map<String, dynamic> attributes = new Map<String, dynamic>();
+  Map<String, dynamic> attributes = Map<String, dynamic>();
 
   Expense(name, amount, category, created) {
     attributes["name"] = name;
@@ -74,7 +73,7 @@ class Expense extends Fact {
 }
 
 class Achievement extends Fact {
-  Map<String, dynamic> attributes = new Map<String, dynamic>();
+  Map<String, dynamic> attributes = Map<String, dynamic>();
 
   Achievement(badge, title, descr) {
     attributes["badge"] = badge;

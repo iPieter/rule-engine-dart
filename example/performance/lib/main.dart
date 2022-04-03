@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:rule_engine/src/fact.dart';
 import 'package:rule_engine/rule_engine.dart';
 
 String code1 = r"""rule "get amount for bob"
@@ -111,28 +110,31 @@ rule "Sober Monkey"
 end""";
 
 main() {
-  for (var code in [code3]) {
+  for (final code in [code3]) {
     print(code.substring(0, 20));
 
     for (var j = 0; j < 8; j++) {
-      RuleEngine ruleEngine = new RuleEngine(code);
+      RuleEngine ruleEngine = RuleEngine(code);
 
       ruleEngine.registerListener((type, arguments) {
         //print("insert $type with arguments $arguments");
       });
 
-      var begin = new DateTime.now();
+      final begin = DateTime.now();
 
-      Fact fact = new SimpleFact("Ewout", 10, new DateTime(1996, 02, 19));
+      Fact fact = SimpleFact("Ewout", 10, DateTime(1996, 02, 19));
       ruleEngine.insertFact(fact);
 
       for (var i = 0; i < pow(10, j); i++) {
-        fact = new SimpleFact("Ewout", 120,
-            new DateTime.now().subtract(new Duration(seconds: 100)));
+        fact = SimpleFact(
+          "Ewout",
+          120,
+          DateTime.now().subtract(Duration(seconds: 100)),
+        );
         ruleEngine.insertFact(fact);
       }
 
-      var end = new DateTime.now();
+      final end = DateTime.now();
       print("$j;${end.difference(begin)}");
     }
   }
@@ -147,7 +149,7 @@ class SimpleFact extends Fact {
 
   @override
   Map<String, dynamic> attributeMap() {
-    Map<String, dynamic> attributes = new Map<String, dynamic>();
+    Map<String, dynamic> attributes = Map<String, dynamic>();
     attributes["name"] = _name;
     attributes["amount"] = _amount;
     attributes["created"] = _created;
